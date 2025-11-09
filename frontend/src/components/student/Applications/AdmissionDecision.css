@@ -1,0 +1,200 @@
+/* src/components/student/Applications/AdmissionDecision.css */
+.admission-decision {
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 20px;
+  background: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.admission-decision.success {
+  border-left: 6px solid #10b981;
+  background: linear-gradient(135deg, #f0fdf4 0%, #ffffff 100%);
+}
+
+.admission-decision.error {
+  border-left: 6px solid #ef4444;
+  background: linear-gradient(135deg, #fef2f2 0%, #ffffff 100%);
+}
+
+.admission-decision.warning {
+  border-left: 6px solid #f59e0b;
+  background: linear-gradient(135deg, #fffbeb 0%, #ffffff 100%);
+}
+
+.decision-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.decision-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-weight: 600;
+}
+
+.admission-decision.success .decision-badge {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.admission-decision.error .decision-badge {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.admission-decision.warning .decision-badge {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.badge-icon {
+  font-size: 1.2rem;
+}
+
+.decision-date {
+  color: #6b7280;
+  font-size: 0.9rem;
+}
+
+.admission-letter {
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background: white;
+  margin-bottom: 20px;
+}
+
+.letter-header {
+  background: #1f2937;
+  color: white;
+  padding: 20px;
+  border-radius: 8px 8px 0 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.letter-header h3 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.institution-seal {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+}
+
+.seal-icon {
+  font-size: 1.5rem;
+}
+
+.letter-content {
+  padding: 30px;
+  line-height: 1.6;
+}
+
+.student-info {
+  margin-bottom: 20px;
+}
+
+.decision-message {
+  margin-bottom: 25px;
+}
+
+.admission-details, .rejection-reason, .encouragement, .acceptance-deadline {
+  margin: 20px 0;
+  padding: 15px;
+  border-radius: 8px;
+}
+
+.admission-details {
+  background: #f0f9ff;
+  border-left: 4px solid #3b82f6;
+}
+
+.admission-details h4 {
+  margin-top: 0;
+  color: #1e40af;
+}
+
+.rejection-reason {
+  background: #fef2f2;
+  border-left: 4px solid #ef4444;
+}
+
+.encouragement {
+  background: #fffbeb;
+  border-left: 4px solid #f59e0b;
+}
+
+.acceptance-deadline {
+  background: #f0fdf4;
+  border-left: 4px solid #10b981;
+}
+
+.acceptance-deadline h4 {
+  margin-top: 0;
+  color: #065f46;
+}
+
+.letter-closing {
+  margin-top: 30px;
+  border-top: 1px solid #e5e7eb;
+  padding-top: 20px;
+}
+
+.decision-actions {
+  display: flex;
+  gap: 12px;
+  margin: 25px 0;
+  justify-content: center;
+}
+
+.btn-success {
+  background: #10b981;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-success:hover {
+  background: #059669;
+}
+
+.download-section {
+  text-align: center;
+  padding-top: 15px;
+  border-top: 1px solid #e5e7eb;
+}
+
+@media (max-width: 768px) {
+  .decision-header {
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
+  }
+  
+  .decision-actions {
+    flex-direction: column;
+  }
+  
+  .letter-header {
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
+  }
+}
