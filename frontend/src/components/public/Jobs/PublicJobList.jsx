@@ -29,8 +29,8 @@ const PublicJobList = () => {
   const fetchJobs = async () => {
     try {
       const response = await get('/public/jobs');
-      if (response.data.success) {
-        setJobs(response.data.jobs);
+      if (response.success) {
+        setJobs(response.jobs);
       }
     } catch (error) {
       console.error('Error fetching jobs:', error);
