@@ -1,7 +1,7 @@
 // src/pages/company/JobManagement.jsx
 import React, { useState, useEffect } from 'react';
-import { useApi } from '../../hooks/useApi';
-import { useNotifications } from '../../hooks/useNotifications';
+import useApi from '../../hooks/useApi';
+import useNotifications from '../../hooks/useNotifications';
 import LoadingSpinner from '../../components/common/Loading/LoadingSpinner';
 import JobForm from '../../components/company/Jobs/JobForm';
 

@@ -1,6 +1,6 @@
 // src/pages/institute/ApplicationReview.jsx
 import React from 'react';
-import ApplicationManagement from '../../components/institute/Applications/ApplicationManagement';
+import ApplicationManagement from '../../components/institution/Applications/ApplicationManagement';
 
 const ApplicationReview = () => {
   return <ApplicationManagement />;

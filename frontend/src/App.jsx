@@ -1,6 +1,6 @@
 import React from 'react'
 import { BrowserRouter } from 'react-router-dom'
-import { AuthProvider } from './contexts/AuthContext'  // ← Context version
+import AuthProvider from './contexts/AuthContext'  // ← Context version
 import { NotificationProvider } from './contexts/NotificationContext'
 import AppRoutes from './routes/AppRoutes'
 import Toast from './components/common/Notification/Toast'

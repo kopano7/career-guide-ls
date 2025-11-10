@@ -1,9 +1,9 @@
 // src/pages/institute/ApplicationManagement.jsx
 import React, { useState, useEffect } from 'react';
-import { useApi } from '../../hooks/useApi';
-import { useNotifications } from '../../hooks/useNotifications';
+import useApi from '../../hooks/useApi';
+import useNotifications from '../../hooks/useNotifications';
 import LoadingSpinner from '../../components/common/Loading/LoadingSpinner';
-import ApplicationReview from '../../components/institute/Applications/ApplicationReview';
+import ApplicationReview from '../../components/institution/Applications/ApplicationReview';
 
 const ApplicationManagement = () => {
   const { get } = useApi();

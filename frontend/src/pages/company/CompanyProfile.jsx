@@ -1,8 +1,8 @@
 // src/pages/company/CompanyProfile.jsx
 import React, { useState, useEffect } from 'react';
-import { useAuth } from '../../hooks/useAuth';
-import { useApi } from '../../hooks/useApi';
-import { useNotifications } from '../../hooks/useNotifications';
+import useAuth from '../../hooks/useAuth';
+import useApi from '../../hooks/useApi';
+import useNotifications from '../../hooks/useNotifications';
 import LoadingSpinner from '../../components/common/Loading/LoadingSpinner';
 
 const CompanyProfile = () => {

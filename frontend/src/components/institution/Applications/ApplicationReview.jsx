@@ -1,7 +1,7 @@
 // src/components/institute/Applications/ApplicationReview.jsx
 import React, { useState } from 'react';
-import { useApi } from '../../../hooks/useApi';
-import { useNotifications } from '../../../hooks/useNotifications';
+import useApi  from '../../../hooks/useApi';
+import useNotifications from '../../../hooks/useNotifications';
 import LoadingSpinner from '../../common/Loading/LoadingSpinner';
 
 const ApplicationReview = ({ application, onClose, onApplicationUpdate }) => {

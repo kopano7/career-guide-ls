@@ -1,9 +1,9 @@
 // src/pages/institute/CourseManagement.jsx
 import React, { useState, useEffect } from 'react';
-import { useApi } from '../../hooks/useApi';
-import { useNotifications } from '../../hooks/useNotifications';
+import useApi from '../../hooks/useApi';
+import useNotifications from '../../hooks/useNotifications';
 import LoadingSpinner from '../../components/common/Loading/LoadingSpinner';
-import CourseForm from '../../components/institute/Courses/CourseForm';
+import CourseForm from '../../components/institution/Courses/CourseForm';
 
 const CourseManagement = () => {
   const { get, post, put, delete: deleteApi } = useApi();

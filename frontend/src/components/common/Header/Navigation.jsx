@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { useAuth } from '../../../contexts/AuthContext';
+import { useAuth }from '../../../contexts/AuthContext';
 
 const Navigation = () => {
   const { isAuthenticated, user } = useAuth();
@@ -13,7 +13,7 @@ const Navigation = () => {
   // Public navigation links
   const publicLinks = [
     { path: '/courses', label: 'Courses' },
-    { path: '/institutions', label: 'Institutions' },
+    { path: '/institute', label: 'Institutions' },
     { path: '/jobs', label: 'Jobs' },
     { path: '/about', label: 'About' }
   ];

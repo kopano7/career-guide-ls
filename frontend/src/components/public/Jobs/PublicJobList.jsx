@@ -1,7 +1,7 @@
 // src/components/public/Jobs/PublicJobList.jsx
 import React, { useState, useEffect } from 'react';
-import { useApi } from '../../../hooks/useApi';
-import { useNotifications } from '../../../hooks/useNotifications';
+import useApi from '../../../hooks/useApi';
+import useNotifications from '../../../hooks/useNotifications';
 import LoadingSpinner from '../../common/Loading/LoadingSpinner';
 
 const PublicJobList = () => {
