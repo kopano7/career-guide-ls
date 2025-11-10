@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import useApi from '../../../hooks/useApi';
 import useNotifications from '../../../hooks/useNotifications';
 import LoadingSpinner from '../../common/Loading/LoadingSpinner';
+import './InstitutionManagement.css';
 
 const InstituteManagement = () => {
   const { get, put } = useApi();

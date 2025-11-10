@@ -43,13 +43,13 @@ const CourseCatalog = () => {
   const fetchCourses = async () => {
     try {
       setLoading(true);
-      console.log('🔄 Fetching courses from API...');
+      console.log('Fetching courses from API...');
       const response = await publicAPI.getCourses();
-      console.log('📦 Courses API Response:', response);
+      console.log('Courses API Response:', response);
       
       if (response.success) {
         const coursesData = response.data?.courses || [];
-        console.log('🎯 Extracted courses:', coursesData.length);
+        console.log('Extracted courses:', coursesData.length);
         
         // Enhance courses with additional data
         const enhancedCourses = coursesData.map(course => ({
@@ -70,13 +70,13 @@ const CourseCatalog = () => {
         
         // Extract unique faculties
         const uniqueFaculties = [...new Set(enhancedCourses.map(course => course.faculty).filter(Boolean))];
-        console.log('📚 Unique faculties:', uniqueFaculties);
+        console.log('Unique faculties:', uniqueFaculties);
         setFaculties(uniqueFaculties);
       } else {
         throw new Error(response.message || 'Failed to fetch courses');
       }
     } catch (error) {
-      console.error('❌ Courses error:', error);
+      console.error('Courses error:', error);
       showError('Loading Error', 'Failed to load courses. Please try again.');
       setCourses([]);
     } finally {
@@ -86,19 +86,19 @@ const CourseCatalog = () => {
 
   const fetchInstitutions = async () => {
     try {
-      console.log('🔄 Fetching institutions from API...');
+      console.log('Fetching institutions from API...');
       const response = await publicAPI.getInstitutions();
-      console.log('🏫 Institutions API Response:', response);
+      console.log('Institutions API Response:', response);
       
       if (response.success) {
         const institutionsData = response.data?.institutions || [];
-        console.log('🎯 Extracted institutions:', institutionsData.length);
+        console.log('Extracted institutions:', institutionsData.length);
         setInstitutions(institutionsData);
       } else {
         throw new Error(response.message || 'Failed to fetch institutions');
       }
     } catch (error) {
-      console.error('❌ Institutions error:', error);
+      console.error('Institutions error:', error);
       showError('Loading Error', 'Failed to load institutions.');
       setInstitutions([]);
     }
@@ -107,13 +107,13 @@ const CourseCatalog = () => {
   const fetchStudentProfile = async () => {
     try {
       setProfileLoading(true);
-      console.log('🔄 Fetching student profile from API...');
+      console.log('Fetching student profile from API...');
       const response = await studentAPI.getProfile();
-      console.log('📊 Profile API Response:', response);
+      console.log('Profile API Response:', response);
       
       if (response.success) {
         const profileData = response.data?.profile || {};
-        console.log('🎯 Student profile loaded:', {
+        console.log('Student profile loaded:', {
           hasGrades: !!profileData.grades,
           subjectsCount: profileData.subjects?.length || 0,
           hasTranscript: !!profileData.transcript,
@@ -125,7 +125,7 @@ const CourseCatalog = () => {
         throw new Error(response.message || 'Failed to fetch profile');
       }
     } catch (error) {
-      console.error('❌ Profile error:', error);
+      console.error('Profile error:', error);
       showError('Profile Error', 'Failed to load your profile data.');
       setProfile(null);
     } finally {
@@ -135,16 +135,16 @@ const CourseCatalog = () => {
 
   const fetchUserApplications = async () => {
     try {
-      console.log('🔄 Fetching user applications...');
+      console.log('Fetching user applications...');
       const response = await studentAPI.getApplications();
       
       if (response.success) {
         const applications = response.data?.applications || [];
-        console.log('📝 User applications loaded:', applications.length);
+        console.log('User applications loaded:', applications.length);
         setUserApplications(applications);
       }
     } catch (error) {
-      console.error('❌ Applications fetch error:', error);
+      console.error('Applications fetch error:', error);
       setUserApplications([]);
     }
   };
@@ -282,17 +282,17 @@ const CourseCatalog = () => {
       });
     }
 
-    console.log('🔍 Filtered courses:', filtered.length);
+    console.log('Filtered courses:', filtered.length);
     setFilteredCourses(filtered);
   };
 
   const handleFilterChange = (newFilters) => {
-    console.log('🎛️ Filters changed:', newFilters);
+    console.log('Filters changed:', newFilters);
     setFilters(newFilters);
   };
 
   const clearFilters = () => {
-    console.log('🧹 Clearing filters');
+    console.log('Clearing filters');
     setFilters({
       institution: '',
       faculty: '',
@@ -355,10 +355,10 @@ const CourseCatalog = () => {
 
       try {
         setApplying(true);
-        console.log('🎯 Applying to course:', course.id);
+        console.log('Applying to course:', course.id);
         
         const response = await studentAPI.applyForCourse({ courseId: course.id });
-        console.log('✅ Application response:', response);
+        console.log('Application response:', response);
         
         if (response.success) {
           showSuccess('Application Submitted!', 'Your application has been submitted successfully.');
@@ -372,7 +372,7 @@ const CourseCatalog = () => {
           throw new Error(response.message || 'Failed to submit application');
         }
       } catch (error) {
-        console.error('❌ Application error:', error);
+        console.error('Application error:', error);
         showError('Application Failed', error.message || 'Failed to submit application. Please try again.');
       } finally {
         setApplying(false);
@@ -384,7 +384,7 @@ const CourseCatalog = () => {
         return {
           type: 'info',
           text: 'Already Applied',
-          icon: '📝'
+          icon: ''
         };
       }
 
@@ -392,7 +392,7 @@ const CourseCatalog = () => {
         return {
           type: 'warning',
           text: 'Institution limit reached',
-          icon: '🚫'
+          icon: ''
         };
       }
 
@@ -400,7 +400,7 @@ const CourseCatalog = () => {
         return {
           type: 'error',
           text: 'Upload transcript to apply',
-          icon: '📄❌'
+          icon: ''
         };
       }
 
@@ -408,7 +408,7 @@ const CourseCatalog = () => {
         return {
           type: 'warning',
           text: 'Transcript verification pending',
-          icon: '⏳'
+          icon: ''
         };
       }
 
@@ -416,14 +416,14 @@ const CourseCatalog = () => {
         return {
           type: 'error',
           text: 'Requirements not met',
-          icon: '❌'
+          icon: ''
         };
       }
 
       return {
         type: 'success',
         text: 'Eligible to apply',
-        icon: '✅'
+        icon: ''
       };
     };
 
@@ -462,7 +462,7 @@ const CourseCatalog = () => {
       {/* Header */}
       <div className="catalog-header">
         <div className="header-content">
-          <h1>Course Catalog 🎓</h1>
+          <h1>Course Catalog </h1>
           <p>Discover courses from approved institutions in Lesotho</p>
           <div style={{ 
             background: '#e8f5e8', 
@@ -504,7 +504,7 @@ const CourseCatalog = () => {
       {/* Application Requirements Status */}
       <div className="requirements-status-banner">
         <div className="banner-content">
-          <div className="banner-icon">📋</div>
+          <div className="banner-icon"></div>
           <div className="banner-text">
             <h4>Application Requirements Status</h4>
             <div className="requirements-list">
@@ -532,7 +532,7 @@ const CourseCatalog = () => {
               </div>
 
               <div className="requirement-item info">
-                <span className="requirement-icon">📝</span>
+                <span className="requirement-icon"></span>
                 <span className="requirement-text">
                   <strong>Current Applications:</strong> {totalApplications} submitted
                 </span>
@@ -551,7 +551,7 @@ const CourseCatalog = () => {
       {(!hasTranscript || !isTranscriptVerified) && (
         <div className="transcript-requirement-banner">
           <div className="banner-content">
-            <div className="banner-icon">⚠️</div>
+            <div className="banner-icon"></div>
             <div>
               <h4>Transcript Required for Applications</h4>
               <p>
@@ -629,7 +629,7 @@ const CourseCatalog = () => {
       {/* Application Requirements Info */}
       <div className="info-banner">
         <div className="banner-content">
-          <div className="banner-icon">ℹ️</div>
+          <div className="banner-icon">ℹ</div>
           <div>
             <h4>Application Requirements</h4>
             <p>
@@ -647,7 +647,7 @@ const CourseCatalog = () => {
       {(!hasTranscript || !hasGrades) && (
         <div className="help-banner">
           <div className="banner-content">
-            <div className="banner-icon">💡</div>
+            <div className="banner-icon"></div>
             <div>
               <h4>Ready to Apply? Complete These Steps:</h4>
               <p>

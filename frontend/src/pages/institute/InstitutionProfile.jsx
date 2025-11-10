@@ -1,13 +1,13 @@
-// src/pages/institute/InstituteProfile.jsx
+// src/pages/institute/InstitutionProfile.jsx
 import React, { useState, useEffect } from 'react';
-import useAuth from '../../hooks/useAuth';
+import { useAuth } from '../../contexts/AuthContext';
 import useApi from '../../hooks/useApi';
 import useNotifications from '../../hooks/useNotifications';
 import LoadingSpinner from '../../components/common/Loading/LoadingSpinner';
 
-const InstituteProfile = () => {
+const InstitutionProfile = () => {
   const { user, refreshUser } = useAuth();
-  const { get, put } = useApi();
+  const { get, put, post } = useApi();
   const { addNotification } = useNotifications();
   
   const [profile, setProfile] = useState(null);
@@ -15,6 +15,7 @@ const InstituteProfile = () => {
   const [editing, setEditing] = useState(false);
   const [saving, setSaving] = useState(false);
   const [formData, setFormData] = useState({});
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     fetchProfile();
@@ -22,13 +23,19 @@ const InstituteProfile = () => {
 
   const fetchProfile = async () => {
     try {
+      setLoading(true);
+      setError(null);
       const response = await get('/institute/profile');
+      
       if (response.data.success) {
         setProfile(response.data.profile);
         setFormData(response.data.profile);
+      } else {
+        throw new Error(response.data.error || 'Failed to load profile');
       }
     } catch (error) {
       console.error('Error fetching profile:', error);
+      setError(error.message);
       addNotification('Error loading profile', 'error');
     } finally {
       setLoading(false);
@@ -44,12 +51,14 @@ const InstituteProfile = () => {
         addNotification('Profile updated successfully!', 'success');
         setEditing(false);
         setProfile(response.data.profile);
-        refreshUser(); // Update auth context
+        refreshUser(); // Refresh auth context
+      } else {
+        throw new Error(response.data.error || 'Failed to update profile');
       }
     } catch (error) {
       console.error('Error updating profile:', error);
       addNotification(
-        error.response?.data?.message || 'Error updating profile', 
+        error.response?.data?.message || error.message || 'Error updating profile', 
         'error'
       );
     } finally {
@@ -64,270 +73,220 @@ const InstituteProfile = () => {
     }));
   };
 
+  // Show loading state
   if (loading) {
     return (
-      <div className="page-container">
-        <div className="page-loading">
-          <LoadingSpinner />
+      <div className="flex justify-center items-center min-h-64">
+        <LoadingSpinner />
+        <span className="ml-2">Loading profile...</span>
+      </div>
+    );
+  }
+
+  // Show error state
+  if (error && !profile) {
+    return (
+      <div className="min-h-64 flex items-center justify-center">
+        <div className="bg-red-50 border border-red-200 rounded-lg p-6 max-w-md w-full text-center">
+          <div className="text-red-500 text-4xl mb-2">⚠️</div>
+          <h3 className="text-red-800 font-medium mb-2">Failed to Load Profile</h3>
+          <p className="text-red-600 mb-4">{error}</p>
+          <button
+            onClick={fetchProfile}
+            className="w-full bg-red-600 text-white py-2 px-4 rounded hover:bg-red-700 transition-colors"
+          >
+            Try Again
+          </button>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="page-container">
-      <div className="page-header">
-        <div className="header-content">
-          <h1 className="page-title">Institute Profile</h1>
-          <p className="page-description">
-            Manage your institution's information and settings
-          </p>
-        </div>
-        <div className="header-actions">
-          {!editing ? (
-            <button 
-              className="btn-primary"
-              onClick={() => setEditing(true)}
-            >
-              Edit Profile
-            </button>
-          ) : (
-            <div className="edit-actions">
-              <button 
-                className="btn-secondary"
-                onClick={() => {
-                  setEditing(false);
-                  setFormData(profile);
-                }}
-                disabled={saving}
-              >
-                Cancel
-              </button>
-              <button 
-                className="btn-primary"
-                onClick={handleSave}
-                disabled={saving}
-              >
-                {saving ? 'Saving...' : 'Save Changes'}
-              </button>
-            </div>
-          )}
-        </div>
-      </div>
-
-      <div className="page-content">
-        <div className="content-grid">
-          {/* Basic Information */}
-          <div className="content-card">
-            <div className="card-header">
-              <h3>Basic Information</h3>
-            </div>
-            <div className="card-content">
-              <div className="form-grid">
-                <div className="form-group">
-                  <label>Institute Name *</label>
-                  {editing ? (
-                    <input
-                      type="text"
-                      value={formData.name || ''}
-                      onChange={(e) => handleInputChange('name', e.target.value)}
-                      required
-                    />
-                  ) : (
-                    <div className="display-value">{profile.name}</div>
-                  )}
-                </div>
-
-                <div className="form-group">
-                  <label>Email *</label>
-                  <div className="display-value email">{user?.email}</div>
-                  <div className="verification-status">
-                    {user?.isVerified ? '✓ Verified' : '⚠ Not Verified'}
+    <div className="min-h-screen bg-gray-50 py-8">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Header Section */}
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-8">
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
+            <div className="flex items-center space-x-4 mb-4 lg:mb-0">
+              <div className="relative">
+                {profile?.logo ? (
+                  <img
+                    src={profile.logo}
+                    alt={`${profile.name} logo`}
+                    className="w-16 h-16 rounded-full object-cover border-2 border-blue-200"
+                  />
+                ) : (
+                  <div className="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center border-2 border-blue-200">
+                    <span className="text-blue-600 font-bold text-xl">
+                      {profile?.name?.charAt(0) || 'I'}
+                    </span>
                   </div>
-                </div>
-
-                <div className="form-group">
-                  <label>Phone Number</label>
-                  {editing ? (
-                    <input
-                      type="tel"
-                      value={formData.phoneNumber || ''}
-                      onChange={(e) => handleInputChange('phoneNumber', e.target.value)}
-                    />
-                  ) : (
-                    <div className="display-value">{profile.phoneNumber || 'Not provided'}</div>
+                )}
+              </div>
+              <div>
+                <h1 className="text-3xl font-bold text-gray-900">{profile?.name}</h1>
+                <p className="text-gray-600 mt-1">{profile?.institutionType || 'Educational Institution'}</p>
+                <div className="flex items-center space-x-4 mt-2">
+                  <span className={`px-3 py-1 rounded-full text-sm font-medium ${
+                    user?.status === 'approved' 
+                      ? 'bg-green-100 text-green-800'
+                      : user?.status === 'pending'
+                      ? 'bg-yellow-100 text-yellow-800'
+                      : 'bg-red-100 text-red-800'
+                  }`}>
+                    {user?.status?.toUpperCase() || 'UNKNOWN'}
+                  </span>
+                  {user?.isEmailVerified && (
+                    <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">
+                      ✓ Email Verified
+                    </span>
                   )}
                 </div>
-
-                <div className="form-group">
-                  <label>Website</label>
-                  {editing ? (
-                    <input
-                      type="url"
-                      value={formData.website || ''}
-                      onChange={(e) => handleInputChange('website', e.target.value)}
-                      placeholder="https://example.com"
-                    />
-                  ) : (
-                    <div className="display-value">
-                      {profile.website ? (
-                        <a href={profile.website} target="_blank" rel="noopener noreferrer">
-                          {profile.website}
-                        </a>
-                      ) : 'Not provided'}
-                    </div>
-                  )}
+              </div>
+            </div>
+            
+            <div className="flex space-x-3">
+              {!editing ? (
+                <button 
+                  className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                  onClick={() => setEditing(true)}
+                >
+                  Edit Profile
+                </button>
+              ) : (
+                <div className="flex space-x-3">
+                  <button 
+                    className="bg-gray-500 text-white px-6 py-2 rounded-lg hover:bg-gray-600 transition-colors font-medium"
+                    onClick={() => {
+                      setEditing(false);
+                      setFormData(profile);
+                    }}
+                    disabled={saving}
+                  >
+                    Cancel
+                  </button>
+                  <button 
+                    className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition-colors font-medium"
+                    onClick={handleSave}
+                    disabled={saving}
+                  >
+                    {saving ? 'Saving...' : 'Save Changes'}
+                  </button>
                 </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {error && (
+          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
+            <p className="text-yellow-800">
+              <strong>Note:</strong> {error}
+            </p>
+          </div>
+        )}
+
+        <div className="space-y-6">
+          {/* Basic Information */}
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">Basic Information</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Institute Name</label>
+                {editing ? (
+                  <input
+                    type="text"
+                    value={formData.name || ''}
+                    onChange={(e) => handleInputChange('name', e.target.value)}
+                    className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                ) : (
+                  <div className="text-gray-900 font-medium">{profile.name}</div>
+                )}
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                <div className="text-gray-900">{user?.email}</div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
+                {editing ? (
+                  <input
+                    type="tel"
+                    value={formData.phone || formData.phoneNumber || ''}
+                    onChange={(e) => handleInputChange('phone', e.target.value)}
+                    className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                ) : (
+                  <div className="text-gray-900">{profile.phone || profile.phoneNumber || 'Not provided'}</div>
+                )}
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Website</label>
+                {editing ? (
+                  <input
+                    type="url"
+                    value={formData.website || ''}
+                    onChange={(e) => handleInputChange('website', e.target.value)}
+                    className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="https://example.com"
+                  />
+                ) : (
+                  <div className="text-gray-900">
+                    {profile.website ? (
+                      <a href={profile.website} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800">
+                        {profile.website}
+                      </a>
+                    ) : 'Not provided'}
+                  </div>
+                )}
               </div>
             </div>
           </div>
 
           {/* Location Information */}
-          <div className="content-card">
-            <div className="card-header">
-              <h3>Location Information</h3>
-            </div>
-            <div className="card-content">
-              <div className="form-grid">
-                <div className="form-group">
-                  <label>Address</label>
-                  {editing ? (
-                    <textarea
-                      value={formData.address || ''}
-                      onChange={(e) => handleInputChange('address', e.target.value)}
-                      rows="3"
-                    />
-                  ) : (
-                    <div className="display-value">{profile.address || 'Not provided'}</div>
-                  )}
-                </div>
-
-                <div className="form-group">
-                  <label>City</label>
-                  {editing ? (
-                    <input
-                      type="text"
-                      value={formData.city || ''}
-                      onChange={(e) => handleInputChange('city', e.target.value)}
-                    />
-                  ) : (
-                    <div className="display-value">{profile.city || 'Not provided'}</div>
-                  )}
-                </div>
-
-                <div className="form-group">
-                  <label>Country</label>
-                  {editing ? (
-                    <input
-                      type="text"
-                      value={formData.country || ''}
-                      onChange={(e) => handleInputChange('country', e.target.value)}
-                    />
-                  ) : (
-                    <div className="display-value">{profile.country || 'Not provided'}</div>
-                  )}
-                </div>
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">Location Information</h2>
+            <div className="grid grid-cols-1 gap-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Address</label>
+                {editing ? (
+                  <textarea
+                    value={formData.address || ''}
+                    onChange={(e) => handleInputChange('address', e.target.value)}
+                    rows="3"
+                    className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                ) : (
+                  <div className="text-gray-900">{profile.address || 'Not provided'}</div>
+                )}
               </div>
             </div>
           </div>
 
           {/* Additional Information */}
-          <div className="content-card">
-            <div className="card-header">
-              <h3>Additional Information</h3>
-            </div>
-            <div className="card-content">
-              <div className="form-grid">
-                <div className="form-group full-width">
-                  <label>Description</label>
-                  {editing ? (
-                    <textarea
-                      value={formData.description || ''}
-                      onChange={(e) => handleInputChange('description', e.target.value)}
-                      placeholder="Describe your institution, programs, and achievements..."
-                      rows="4"
-                    />
-                  ) : (
-                    <div className="display-value">
-                      {profile.description || 'No description provided'}
-                    </div>
-                  )}
-                </div>
-
-                <div className="form-group">
-                  <label>Established Year</label>
-                  {editing ? (
-                    <input
-                      type="number"
-                      value={formData.establishedYear || ''}
-                      onChange={(e) => handleInputChange('establishedYear', e.target.value)}
-                      min="1800"
-                      max="2030"
-                    />
-                  ) : (
-                    <div className="display-value">{profile.establishedYear || 'Not provided'}</div>
-                  )}
-                </div>
-
-                <div className="form-group">
-                  <label>Institution Type</label>
-                  {editing ? (
-                    <select
-                      value={formData.institutionType || ''}
-                      onChange={(e) => handleInputChange('institutionType', e.target.value)}
-                    >
-                      <option value="">Select Type</option>
-                      <option value="university">University</option>
-                      <option value="college">College</option>
-                      <option value="polytechnic">Polytechnic</option>
-                      <option value="vocational">Vocational School</option>
-                      <option value="high-school">High School</option>
-                    </select>
-                  ) : (
-                    <div className="display-value">{profile.institutionType || 'Not provided'}</div>
-                  )}
-                </div>
-
-                <div className="form-group">
-                  <label>Accreditation</label>
-                  {editing ? (
-                    <input
-                      type="text"
-                      value={formData.accreditation || ''}
-                      onChange={(e) => handleInputChange('accreditation', e.target.value)}
-                      placeholder="e.g., National Accreditation Board"
-                    />
-                  ) : (
-                    <div className="display-value">{profile.accreditation || 'Not provided'}</div>
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Statistics */}
-          <div className="content-card">
-            <div className="card-header">
-              <h3>Institution Statistics</h3>
-            </div>
-            <div className="card-content">
-              <div className="stats-grid">
-                <div className="stat-item">
-                  <div className="stat-number">{profile.stats?.totalCourses || 0}</div>
-                  <div className="stat-label">Courses Offered</div>
-                </div>
-                <div className="stat-item">
-                  <div className="stat-number">{profile.stats?.totalStudents || 0}</div>
-                  <div className="stat-label">Students</div>
-                </div>
-                <div className="stat-item">
-                  <div className="stat-number">{profile.stats?.pendingApplications || 0}</div>
-                  <div className="stat-label">Pending Applications</div>
-                </div>
-                <div className="stat-item">
-                  <div className="stat-number">{profile.stats?.admissionRate || 0}%</div>
-                  <div className="stat-label">Admission Rate</div>
-                </div>
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">Additional Information</h2>
+            <div className="grid grid-cols-1 gap-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                {editing ? (
+                  <textarea
+                    value={formData.description || ''}
+                    onChange={(e) => handleInputChange('description', e.target.value)}
+                    rows="4"
+                    className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Describe your institution, programs, facilities, and achievements..."
+                  />
+                ) : (
+                  <div className="text-gray-900 whitespace-pre-line">
+                    {profile.description || 'No description provided'}
+                  </div>
+                )}
               </div>
             </div>
           </div>

@@ -22,7 +22,7 @@ const Navigation = () => {
   const getRoleLinks = () => {
     if (!isAuthenticated) return [];
     
-    console.log('🎭 getRoleLinks called:', {
+    console.log(' getRoleLinks called:', {
       userRole: user?.role,
       userEmail: user?.email,
       isAuthenticated
@@ -45,7 +45,7 @@ const Navigation = () => {
           { path: '/institute/courses', label: 'Courses' },
           { path: '/institute/applications', label: 'Applications' }
         ];
-        console.log('🏫 Returning institute links:', instituteLinks);
+        console.log(' Returning institute links:', instituteLinks);
         return instituteLinks;
         
       case 'company':
@@ -54,7 +54,7 @@ const Navigation = () => {
           { path: '/company/jobs', label: 'Jobs' },
           { path: '/company/applicants', label: 'Applicants' }
         ];
-        console.log('🏢 Returning company links:', companyLinks);
+        console.log(' Returning company links:', companyLinks);
         return companyLinks;
         
       case 'admin':
@@ -64,7 +64,7 @@ const Navigation = () => {
           { path: '/admin/institutes', label: 'Institutes' },
           { path: '/admin/companies', label: 'Companies' }
         ];
-        console.log('👑 Returning admin links:', adminLinks);
+        console.log(' Returning admin links:', adminLinks);
         return adminLinks;
         
       default:
@@ -76,7 +76,7 @@ const Navigation = () => {
   // Determine which links to show
   const links = isAuthenticated ? getRoleLinks() : publicLinks;
 
-  console.log('🧭 NAVIGATION DEBUG:', {
+  console.log(' NAVIGATION DEBUG:', {
     isAuthenticated,
     userRole: user?.role,
     userEmail: user?.email,

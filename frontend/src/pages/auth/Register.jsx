@@ -232,9 +232,9 @@ const Register = () => {
                 />
                 <div className="role-card">
                   <div className="role-icon">
-                    {role === 'student' && '🎓'}
-                    {role === 'institute' && '🏫'}
-                    {role === 'company' && '💼'}
+                    {role === 'student'}
+                    {role === 'institute'}
+                    {role === 'company'}
                   </div>
                   <div className="role-info">
                     <div className="role-name">{getRoleDisplayName(role)}</div>

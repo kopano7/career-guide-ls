@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom'; // ADD THIS IMPORT
 import { useAuth } from '../../contexts/AuthContext';
+import '../../styles/pages/dashboard.css';
 
 const StudentDashboard = () => {
   const { user, logout } = useAuth();

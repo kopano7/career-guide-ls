@@ -1,18 +1,280 @@
+/* === APP STYLES WITH LIGHT/DARK MODE === */
 .app {
   min-height: 100vh;
+  background-color: white;
+  color: #424242;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+/* Dark Mode */
+.app.dark-mode {
+  background-color: #1a237e;
+  color: #ffffff;
+}
+
+/* Theme Toggle Button */
+.theme-toggle {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+  background: #1b5e20;
+  border: 1px solid #1b5e20;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(27, 94, 32, 0.3);
 }
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+.theme-toggle:hover {
+  background: #2e7d32;
+  border-color: #2e7d32;
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(27, 94, 32, 0.4);
 }
 
-body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  line-height: 1.6;
-  color: #333;
+.theme-toggle:active {
+  transform: scale(0.95);
+}
+
+.theme-toggle svg {
+  color: white;
+  width: 24px;
+  height: 24px;
+}
+
+/* Light Mode Icon (Sun) */
+.theme-toggle .sun-icon {
+  display: none;
+}
+
+.app.dark-mode .theme-toggle .sun-icon {
+  display: block;
+}
+
+/* Dark Mode Icon (Moon) */
+.theme-toggle .moon-icon {
+  display: block;
+}
+
+.app.dark-mode .theme-toggle .moon-icon {
+  display: none;
+}
+
+/* Global Styles for Light/Dark Mode */
+.app a {
+  color: #1b5e20;
+  transition: color 0.3s ease;
+}
+
+.app.dark-mode a {
+  color: #4caf50;
+}
+
+.app a:hover {
+  color: #2e7d32;
+}
+
+.app.dark-mode a:hover {
+  color: #66bb6a;
+}
+
+.app button {
+  transition: all 0.3s ease;
+}
+
+.app input,
+.app select,
+.app textarea {
+  transition: all 0.3s ease;
+}
+
+.app input:focus,
+.app select:focus,
+.app textarea:focus {
+  border-color: #1b5e20;
+  box-shadow: 0 0 0 3px rgba(27, 94, 32, 0.1);
+}
+
+.app.dark-mode input:focus,
+.app.dark-mode select:focus,
+.app.dark-mode textarea:focus {
+  border-color: #4caf50;
+  box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2);
+}
+
+/* Toast Notifications */
+.toast-container {
+  z-index: 9999;
+}
+
+.app .toast {
+  background: white;
+  border: 1px solid #e0e0e0;
+  color: #424242;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.app.dark-mode .toast {
+  background: #2d3748;
+  border: 1px solid #1b5e20;
+  color: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Scrollbar Styling */
+.app::-webkit-scrollbar {
+  width: 8px;
+}
+
+.app::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.app.dark-mode::-webkit-scrollbar-track {
+  background: #151f6d;
+}
+
+.app::-webkit-scrollbar-thumb {
+  background: #1b5e20;
+  border-radius: 4px;
+}
+
+.app.dark-mode::-webkit-scrollbar-thumb {
+  background: #4caf50;
+}
+
+.app::-webkit-scrollbar-thumb:hover {
+  background: #2e7d32;
+}
+
+.app.dark-mode::-webkit-scrollbar-thumb:hover {
+  background: #66bb6a;
+}
+
+/* Loading States */
+.app .loading {
+  color: #666;
+}
+
+.app.dark-mode .loading {
+  color: #bdbdbd;
+}
+
+/* Card and Container Shadows */
+.app .card,
+.app .container {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.app.dark-mode .card,
+.app.dark-mode .container {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Border Colors */
+.app .border-light {
+  border-color: #e0e0e0;
+}
+
+.app.dark-mode .border-light {
+  border-color: #1b5e20;
+}
+
+/* Text Colors */
+.app .text-muted {
+  color: #666;
+}
+
+.app.dark-mode .text-muted {
+  color: #bdbdbd;
+}
+
+.app .text-primary {
+  color: #1a237e;
+}
+
+.app.dark-mode .text-primary {
+  color: white;
+}
+
+.app .text-success {
+  color: #1b5e20;
+}
+
+.app.dark-mode .text-success {
+  color: #4caf50;
+}
+
+/* Background Colors */
+.app .bg-light {
   background-color: #f8f9fa;
+}
+
+.app.dark-mode .bg-light {
+  background-color: #151f6d;
+}
+
+.app .bg-white {
+  background-color: white;
+}
+
+.app.dark-mode .bg-white {
+  background-color: #2d3748;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .theme-toggle {
+    top: 15px;
+    right: 15px;
+    width: 45px;
+    height: 45px;
+  }
+  
+  .theme-toggle svg {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .theme-toggle {
+    top: 10px;
+    right: 10px;
+    width: 40px;
+    height: 40px;
+  }
+  
+  .theme-toggle svg {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+/* Smooth Transitions for All Elements */
+.app * {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Focus States for Accessibility */
+.app button:focus,
+.app a:focus,
+.app input:focus,
+.app select:focus {
+  outline: 2px solid #1b5e20;
+  outline-offset: 2px;
+}
+
+.app.dark-mode button:focus,
+.app.dark-mode a:focus,
+.app.dark-mode input:focus,
+.app.dark-mode select:focus {
+  outline: 2px solid #4caf50;
 }

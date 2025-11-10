@@ -28,11 +28,11 @@ const Profile = () => {
   const fetchProfileData = async () => {
     try {
       const response = await get('/student/profile');
-      console.log('📨 Profile API Response:', response);
+      console.log(' Profile API Response:', response);
       
       if (response.success) {
         const profileData = response.data?.profile || {};
-        console.log('🎯 Profile data structure:', {
+        console.log(' Profile data structure:', {
           hasGrades: !!profileData.grades,
           subjectsCount: profileData.subjects?.length || 0,
           hasTranscript: !!profileData.transcript,
@@ -54,10 +54,10 @@ const Profile = () => {
 
   const handleProfileUpdate = async (updatedData) => {
     try {
-      console.log('💾 Saving profile data to database:', updatedData);
+      console.log(' Saving profile data to database:', updatedData);
       
       const response = await put('/student/profile', updatedData);
-      console.log('📨 Update Profile Response:', response);
+      console.log(' Update Profile Response:', response);
       
       if (response.success) {
         const updatedProfile = response.data?.profile || updatedData;
@@ -65,7 +65,7 @@ const Profile = () => {
         showSuccess('Profile Updated', 'Profile updated successfully and saved to database!');
         
         // Log what was saved for debugging
-        console.log('✅ Profile saved to database with:', {
+        console.log(' Profile saved to database with:', {
           gradesCount: Object.keys(updatedProfile.grades || {}).length,
           subjectsCount: updatedProfile.subjects?.length || 0,
           hasTranscript: !!updatedProfile.transcript,
@@ -424,7 +424,7 @@ const AcademicInfoTab = ({ profile, onProfileUpdate }) => {
       transcript: profile.transcript
     };
     
-    console.log('💾 Saving academic data to database:', {
+    console.log(' Saving academic data to database:', {
       subjectsCount: saveData.subjects.length,
       gradesCount: Object.keys(saveData.grades).length,
       calculatedGPA: saveData.gpa
@@ -808,7 +808,7 @@ const DocumentsTab = ({ profile, onProfileUpdate }) => {
             <div className="documents-grid">
               {safeProfile.documents?.map((doc, index) => (
                 <div key={index} className="document-card">
-                  <div className="document-icon">📄</div>
+                  <div className="document-icon"></div>
                   <div className="document-info">
                     <div className="document-name">{doc.name}</div>
                     <div className="document-meta">

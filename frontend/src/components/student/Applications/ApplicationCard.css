@@ -1,32 +1,68 @@
+/* === APPLICATION CARD STYLES === */
 .application-card {
   background: white;
   border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  border: 1px solid #e1e5e9;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid #e0e0e0;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  position: relative;
   overflow: hidden;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Dark Mode */
+.application-card.dark-mode {
+  background: #2d3748;
+  border-color: #1b5e20;
+  color: white;
 }
 
 .application-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 8px 24px rgba(27, 94, 32, 0.15);
+  border-color: #1b5e20;
 }
 
-/* Status-based border colors */
+/* Status Colors */
 .application-card.status-pending {
-  border-left: 4px solid #ffc107;
+  border-left: 4px solid #ff9800;
 }
 
 .application-card.status-admitted {
-  border-left: 4px solid #28a745;
+  border-left: 4px solid #1b5e20;
 }
 
 .application-card.status-rejected {
-  border-left: 4px solid #dc3545;
+  border-left: 4px solid #d32f2f;
 }
 
 .application-card.status-accepted {
-  border-left: 4px solid #007bff;
+  border-left: 4px solid #1976d2;
+}
+
+.application-card.status-default {
+  border-left: 4px solid #757575;
+}
+
+.application-card.dark-mode.status-pending {
+  border-left-color: #ff9800;
+}
+
+.application-card.dark-mode.status-admitted {
+  border-left-color: #4caf50;
+}
+
+.application-card.dark-mode.status-rejected {
+  border-left-color: #f44336;
+}
+
+.application-card.dark-mode.status-accepted {
+  border-left-color: #2196f3;
+}
+
+.application-card.dark-mode.status-default {
+  border-left-color: #bdbdbd;
 }
 
 /* Application Header */
@@ -34,202 +70,415 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px 20px;
-  background: #f8f9fa;
-  border-bottom: 1px solid #e1e5e9;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.application-card.dark-mode .application-header {
+  border-bottom-color: #1b5e20;
 }
 
 .application-status {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 0.8rem;
 }
 
 .status-icon {
-  font-size: 1.2rem;
+  font-size: 1.5rem;
 }
 
 .status-text {
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: 1rem;
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  background: #f5f5f5;
+  color: #424242;
+  border: 1px solid #e0e0e0;
 }
 
-.status-pending .status-text {
-  color: #856404;
+.application-card.status-pending .status-text {
+  background: #fff3e0;
+  color: #f57c00;
+  border-color: #f57c00;
 }
 
-.status-admitted .status-text {
-  color: #155724;
+.application-card.status-admitted .status-text {
+  background: #e8f5e8;
+  color: #1b5e20;
+  border-color: #1b5e20;
 }
 
-.status-rejected .status-text {
-  color: #721c24;
+.application-card.status-rejected .status-text {
+  background: #ffebee;
+  color: #d32f2f;
+  border-color: #d32f2f;
 }
 
-.status-accepted .status-text {
-  color: #004085;
+.application-card.status-accepted .status-text {
+  background: #e3f2fd;
+  color: #1976d2;
+  border-color: #1976d2;
+}
+
+.application-card.dark-mode .status-text {
+  background: #1a237e;
+  color: white;
+  border-color: #1b5e20;
 }
 
 .application-date {
   color: #666;
-  font-size: 0.8rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.application-card.dark-mode .application-date {
+  color: #bdbdbd;
 }
 
 /* Application Content */
 .application-content {
-  padding: 20px;
+  margin-bottom: 1.5rem;
 }
 
 .course-name {
   font-size: 1.3rem;
-  font-weight: 600;
-  color: #333;
-  margin: 0 0 5px 0;
+  font-weight: 700;
+  margin: 0 0 0.5rem 0;
+  color: #1a237e;
+  line-height: 1.3;
+}
+
+.application-card.dark-mode .course-name {
+  color: white;
 }
 
 .institution-name {
-  color: #007bff;
+  color: #666;
   font-weight: 500;
-  margin: 0 0 20px 0;
-  font-size: 0.9rem;
+  font-size: 1.1rem;
+  margin: 0 0 1.5rem 0;
+}
+
+.application-card.dark-mode .institution-name {
+  color: #bdbdbd;
 }
 
 /* Application Details */
 .application-details {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 15px;
-  margin-bottom: 20px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid #e0e0e0;
+}
+
+.application-card.dark-mode .application-details {
+  background: #1a237e;
+  border-color: #1b5e20;
 }
 
 .detail-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 8px 0;
-  border-bottom: 1px solid #f0f0f0;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.application-card.dark-mode .detail-row {
+  border-bottom-color: #1b5e20;
+}
+
+.detail-row:last-child {
+  border-bottom: none;
 }
 
 .detail-label {
   color: #666;
-  font-size: 0.8rem;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.application-card.dark-mode .detail-label {
+  color: #bdbdbd;
 }
 
 .detail-value {
-  color: #333;
+  color: #424242;
   font-weight: 600;
   font-size: 0.9rem;
 }
 
+.application-card.dark-mode .detail-value {
+  color: white;
+}
+
 .detail-value.qualified {
-  color: #28a745;
+  color: #1b5e20;
+  font-weight: 700;
+}
+
+.application-card.dark-mode .detail-value.qualified {
+  color: #4caf50;
 }
 
 .detail-value.not-qualified {
-  color: #dc3545;
+  color: #d32f2f;
+  font-weight: 700;
+}
+
+.application-card.dark-mode .detail-value.not-qualified {
+  color: #f44336;
 }
 
 /* Application Notes */
 .application-notes {
-  background: #f8f9fa;
-  padding: 15px;
-  border-radius: 6px;
-  margin-bottom: 20px;
-  border-left: 3px solid #007bff;
+  background: #fff3e0;
+  border: 1px solid #f57c00;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.application-card.dark-mode .application-notes {
+  background: #ef6c00;
+  border-color: #ff9800;
 }
 
 .application-notes h4 {
-  font-size: 0.9rem;
-  color: #333;
-  margin: 0 0 8px 0;
+  color: #f57c00;
+  margin: 0 0 0.8rem 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.application-card.dark-mode .application-notes h4 {
+  color: white;
 }
 
 .application-notes p {
+  color: #424242;
   margin: 0;
-  color: #666;
+  line-height: 1.5;
   font-size: 0.9rem;
-  line-height: 1.4;
+}
+
+.application-card.dark-mode .application-notes p {
+  color: white;
 }
 
 /* Application Timeline */
 .application-timeline {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+  background: #e8f5e8;
+  border: 1px solid #1b5e20;
+  border-radius: 8px;
+  padding: 1.5rem;
+}
+
+.application-card.dark-mode .application-timeline {
+  background: #1b5e20;
+  border-color: #4caf50;
 }
 
 .timeline-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 0.8rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid rgba(27, 94, 32, 0.2);
+}
+
+.application-card.dark-mode .timeline-item {
+  border-bottom-color: rgba(76, 175, 80, 0.3);
+}
+
+.timeline-item:last-child {
+  border-bottom: none;
 }
 
 .timeline-label {
-  color: #666;
+  color: #1b5e20;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.application-card.dark-mode .timeline-label {
+  color: white;
 }
 
 .timeline-date {
-  color: #333;
-  font-weight: 500;
+  color: #424242;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.application-card.dark-mode .timeline-date {
+  color: #e0e0e0;
 }
 
 /* Application Actions */
 .application-actions {
   display: flex;
-  gap: 10px;
-  padding: 0 20px 20px;
+  gap: 1rem;
   flex-wrap: wrap;
+  align-items: center;
 }
 
-.application-actions .btn {
-  flex: 1;
-  min-width: 140px;
-  justify-content: center;
-}
-
-.accept-btn {
-  background: #28a745;
-  border-color: #28a745;
+.btn {
+  padding: 0.8rem 1.5rem;
+  border-radius: 8px;
   font-weight: 600;
+  text-decoration: none;
+  border: 1px solid;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-width: 140px;
 }
 
-.accept-btn:hover {
-  background: #218838;
-  border-color: #1e7e34;
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
 }
 
-.withdraw-btn {
-  color: #dc3545;
-  border-color: #dc3545;
+.btn-success {
+  background: #1b5e20;
+  color: white;
+  border-color: #1b5e20;
 }
 
-.withdraw-btn:hover {
-  background: #dc3545;
+.btn-success:hover:not(:disabled) {
+  background: #2e7d32;
+  border-color: #2e7d32;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(27, 94, 32, 0.3);
+}
+
+.btn-outline {
+  background: transparent;
+  color: #1b5e20;
+  border-color: #1b5e20;
+}
+
+.application-card.dark-mode .btn-outline {
+  color: #4caf50;
+  border-color: #4caf50;
+}
+
+.btn-outline:hover:not(:disabled) {
+  background: #1b5e20;
+  color: white;
+  transform: translateY(-2px);
+}
+
+.application-card.dark-mode .btn-outline:hover:not(:disabled) {
+  background: #4caf50;
   color: white;
 }
 
+.accept-btn {
+  order: 1;
+}
+
+.withdraw-btn {
+  order: 2;
+}
+
+.view-details-btn {
+  order: 3;
+}
+
 .apply-again-btn {
-  flex: 2;
+  order: 4;
+  margin-left: auto;
+}
+
+/* Loading Spinner */
+.loading-spinner {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.loading-spinner.small {
+  font-size: 0.8rem;
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
-  .application-header {
-    flex-direction: column;
-    gap: 10px;
-    align-items: flex-start;
+  .application-card {
+    padding: 1.25rem;
   }
 
-  .application-details {
-    grid-template-columns: 1fr;
+  .application-header {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-start;
   }
 
   .application-actions {
     flex-direction: column;
+    align-items: stretch;
   }
 
-  .application-actions .btn {
+  .btn {
+    width: 100%;
     min-width: auto;
+  }
+
+  .apply-again-btn {
+    margin-left: 0;
+    order: 5;
+  }
+
+  .detail-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.3rem;
+  }
+
+  .timeline-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.3rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .application-card {
+    padding: 1rem;
+  }
+
+  .application-details,
+  .application-notes,
+  .application-timeline {
+    padding: 1rem;
+  }
+
+  .course-name {
+    font-size: 1.2rem;
+  }
+
+  .institution-name {
+    font-size: 1rem;
+  }
+
+  .status-text {
+    font-size: 0.9rem;
+    padding: 0.3rem 0.6rem;
+  }
+
+  .btn {
+    padding: 0.7rem 1.2rem;
+    font-size: 0.85rem;
   }
 }

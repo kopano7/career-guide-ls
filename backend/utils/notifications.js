@@ -32,10 +32,10 @@ const createNotification = async (userId, type, title, message, data = {}) => {
 
     const notificationRef = await db.collection('notifications').add(notification);
     
-    console.log(`✅ Notification created for user ${userId}: ${type}`);
+    console.log(`Notification created for user ${userId}: ${type}`);
     return { id: notificationRef.id, ...notification };
   } catch (error) {
-    console.error('❌ Error creating notification:', error);
+    console.error('Error creating notification:', error);
     throw error;
   }
 };
@@ -59,7 +59,7 @@ const getUserNotifications = async (userId, limit = 20, unreadOnly = false) => {
       createdAt: doc.data().createdAt?.toDate?.() || doc.data().createdAt,
     }));
   } catch (error) {
-    console.error('❌ Error getting user notifications:', error);
+    console.error('Error getting user notifications:', error);
     throw error;
   }
 };
@@ -73,7 +73,7 @@ const markAsRead = async (notificationId) => {
     });
     return true;
   } catch (error) {
-    console.error('❌ Error marking notification as read:', error);
+    console.error('Error marking notification as read:', error);
     throw error;
   }
 };
@@ -95,10 +95,10 @@ const markAllAsRead = async (userId) => {
     });
 
     await batch.commit();
-    console.log(`✅ Marked all notifications as read for user ${userId}`);
+    console.log(`Marked all notifications as read for user ${userId}`);
     return true;
   } catch (error) {
-    console.error('❌ Error marking all notifications as read:', error);
+    console.error('Error marking all notifications as read:', error);
     throw error;
   }
 };
@@ -113,7 +113,7 @@ const getUnreadCount = async (userId) => {
 
     return snapshot.size;
   } catch (error) {
-    console.error('❌ Error getting unread count:', error);
+    console.error('Error getting unread count:', error);
     throw error;
   }
 };
@@ -134,7 +134,7 @@ const notificationCreators = {
   // Application status changed
   applicationStatusChanged: async (studentId, applicationId, courseName, newStatus, notes = '') => {
     const statusText = newStatus.charAt(0).toUpperCase() + newStatus.slice(1);
-    const emoji = newStatus === 'admitted' ? '🎓' : newStatus === 'rejected' ? '❌' : '⏳';
+    const emoji = newStatus === 'admitted' ? '' : newStatus === 'rejected' ? '' : '';
     
     return await createNotification(
       studentId,
@@ -156,7 +156,7 @@ const notificationCreators = {
     return await createNotification(
       studentId,
       NOTIFICATION_TYPES.ADMISSION_OFFER,
-      '🎓 Admission Offer!',
+      'Admission Offer!',
       `Congratulations! You've been admitted to ${courseName} at ${instituteName}. You have until ${deadline} to accept.`,
       { 
         applicationId, 
@@ -173,7 +173,7 @@ const notificationCreators = {
     return await createNotification(
       studentId,
       NOTIFICATION_TYPES.JOB_MATCH,
-      '💼 New Job Match!',
+      'New Job Match!',
       `A new job "${jobTitle}" at ${companyName} matches your profile.`,
       { jobId, jobTitle, companyName, actionUrl: `/jobs/${jobId}` }
     );
@@ -184,7 +184,7 @@ const notificationCreators = {
     return await createNotification(
       userId,
       NOTIFICATION_TYPES.ACCOUNT_APPROVED,
-      '✅ Account Approved!',
+      'Account Approved!',
       `Your ${userRole} account has been approved. You can now access all features.`,
       { userRole, userName, actionUrl: `/dashboard` }
     );
@@ -195,7 +195,7 @@ const notificationCreators = {
     return await createNotification(
       studentId,
       NOTIFICATION_TYPES.NEW_COURSE,
-      '📚 New Course Available',
+      'New Course Available',
       `A new course "${courseName}" is available at ${instituteName}.`,
       { courseId, courseName, instituteName, actionUrl: `/courses` }
     );
@@ -206,7 +206,7 @@ const notificationCreators = {
     return await createNotification(
       studentId,
       NOTIFICATION_TYPES.TRANSCRIPT_VERIFIED,
-      '📄 Transcript Verified',
+      'Transcript Verified',
       'Your academic transcript has been verified and is now available for job applications.',
       { transcriptId, actionUrl: `/profile` }
     );
@@ -228,7 +228,7 @@ const notificationCreators = {
     return await createNotification(
       userId,
       NOTIFICATION_TYPES.RULE_VIOLATION,
-      '⚠️ Rule Violation Warning',
+      'Rule Violation Warning',
       `You have received a warning for violating platform rules: ${reason}. This is warning ${warningCount} of 3.`,
       { reason, warningCount, actionUrl: `/profile` }
     );
@@ -239,7 +239,7 @@ const notificationCreators = {
     return await createNotification(
       userId,
       NOTIFICATION_TYPES.ACCOUNT_SUSPENDED,
-      '🚫 Account Suspended',
+      'Account Suspended',
       `Your account has been suspended. Reason: ${reason}`,
       { reason, actionUrl: `/support` }
     );
@@ -262,10 +262,10 @@ const cleanupOldNotifications = async (daysOld = 30) => {
     });
 
     await batch.commit();
-    console.log(`✅ Cleaned up ${oldNotifications.size} old notifications`);
+    console.log(`Cleaned up ${oldNotifications.size} old notifications`);
     return oldNotifications.size;
   } catch (error) {
-    console.error('❌ Error cleaning up old notifications:', error);
+    console.error('Error cleaning up old notifications:', error);
     throw error;
   }
 };

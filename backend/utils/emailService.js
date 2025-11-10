@@ -97,7 +97,7 @@ const emailTemplates = {
     subject: 'Your Account Has Been Approved',
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-        <h2 style="color: #10b981;">Account Approved! ✅</h2>
+        <h2 style="color: #10b981;">Account Approved!</h2>
         <p>Hello ${user.name},</p>
         <p>Great news! Your ${user.role} account has been approved by our admin team.</p>
         <p>You can now access all features of the platform.</p>
@@ -117,7 +117,7 @@ const emailTemplates = {
     subject: 'Course Application Submitted Successfully',
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-        <h2 style="color: #2563eb;">Application Submitted! 📚</h2>
+        <h2 style="color: #2563eb;">Application Submitted!</h2>
         <p>Hello ${student.name},</p>
         <p>Your application for <strong>${course.name}</strong> has been submitted successfully.</p>
         <p><strong>Application Details:</strong></p>
@@ -180,7 +180,7 @@ const emailTemplates = {
     subject: 'New Job Opportunity Matching Your Profile',
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-        <h2 style="color: #8b5cf6;">New Job Opportunity! 💼</h2>
+        <h2 style="color: #8b5cf6;">New Job Opportunity!</h2>
         <p>Hello ${student.name},</p>
         <p>We found a job opportunity that matches your profile:</p>
         <div style="background: #f8fafc; padding: 20px; border-radius: 8px; margin: 20px 0;">
@@ -206,7 +206,7 @@ const emailTemplates = {
     subject: 'Password Reset Request',
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-        <h2 style="color: #ef4444;">Password Reset 🔒</h2>
+        <h2 style="color: #ef4444;">Password Reset</h2>
         <p>Hello ${user.name},</p>
         <p>We received a request to reset your password. Click the button below to create a new password:</p>
         <div style="margin: 30px 0;">
@@ -246,10 +246,10 @@ const sendEmail = async (to, templateName, data) => {
     };
 
     const result = await transporter.sendMail(mailOptions);
-    console.log(`✅ Email sent to ${to}: ${templateName}`);
+    console.log(`Email sent to ${to}: ${templateName}`);
     return { success: true, messageId: result.messageId };
   } catch (error) {
-    console.error('❌ Error sending email:', error.message);
+    console.error('Error sending email:', error.message);
     return { success: false, error: error.message };
   }
 };

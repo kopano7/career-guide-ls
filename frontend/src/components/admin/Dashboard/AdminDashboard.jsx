@@ -4,6 +4,7 @@ import useApi  from '../../../hooks/useApi';
 import { useAuth } from '../../contexts/AuthContext';
 import useNotifications from '../../../hooks/useNotifications';
 import LoadingSpinner from '../../common/Loading/LoadingSpinner';
+import './Admindashbord.css';
 
 const AdminDashboard = () => {
   const { user } = useAuth();

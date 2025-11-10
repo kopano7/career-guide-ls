@@ -44,5 +44,28 @@ export const instituteAPI = {
   getDashboardData: async () => {
     const response = await api.get('/institute/dashboard');
     return response.data;
+  },
+
+  // Faculty Management
+  addFaculty: async (facultyData) => {
+    const response = await api.post('/institute/faculties', facultyData);
+    return response.data;
+  },
+
+  getFaculties: async () => {
+    const response = await api.get('/institute/faculties');
+    return response.data;
+  },
+
+  // Admission Publishing
+  publishAdmissions: async (admissionData) => {
+    const response = await api.post('/institute/admissions/publish', admissionData);
+    return response.data;
+  },
+
+  // Enhanced Application Management
+  getQualifiedApplications: async (courseId) => {
+    const response = await api.get(`/institute/applications/qualified?courseId=${courseId}`);
+    return response.data;
   }
 };

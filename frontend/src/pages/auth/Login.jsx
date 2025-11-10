@@ -83,11 +83,11 @@ const Login = () => {
       console.log('📥 Login result:', result);
       
       if (result.success) {
-        console.log('✅ Login successful, user role:', result.user.role);
+        console.log('Login successful, user role:', result.user.role);
         
         // Get role-based redirect path
         const redirectPath = getRoleBasedRedirect(result.user.role);
-        console.log('🔄 Redirecting to:', redirectPath);
+        console.log('Redirecting to:', redirectPath);
         
         showSuccess('Login Successful', `Welcome back, ${result.user.name || result.user.email}!`);
         navigate(redirectPath, { replace: true });
@@ -120,7 +120,7 @@ const Login = () => {
             borderRadius: '8px',
             border: '2px solid #10b981'
           }}>
-            <strong style={{ color: '#065f46', fontSize: '16px' }}>🔍 DEBUG: User is logged in!</strong>
+            <strong style={{ color: '#065f46', fontSize: '16px' }}>DEBUG: User is logged in!</strong>
             <div style={{ marginTop: '8px', fontSize: '14px' }}>
               <div><strong>Email:</strong> {user.email}</div>
               <div><strong>Role:</strong> {user.role}</div>
@@ -136,10 +136,10 @@ const Login = () => {
         <button 
           type="button"
           onClick={() => {
-            console.log('🧪 MANUAL LOGIN TEST STARTED');
+            console.log(' MANUAL LOGIN TEST STARTED');
             login('kopanolejone7@gmail.com', 'xlxu erob upbn gcti')
               .then(result => {
-                console.log('🧪 Manual login result:', result);
+                console.log(' Manual login result:', result);
                 if (result.success) {
                   const redirectPath = getRoleBasedRedirect(result.user.role);
                   showSuccess('Manual Login Successful', `Welcome ${result.user.email}!`);
@@ -166,7 +166,8 @@ const Login = () => {
             fontWeight: 'bold'
           }}
         >
-          🧪 Test Login (Manual - kopanolejone7@gmail.com)
+        <p>Follow that course you have been interested in.</p>
+        <strong>Good Luck!</strong>
         </button>
 
         <form onSubmit={handleSubmit} className="auth-form">
@@ -236,12 +237,10 @@ const Login = () => {
 
         <div className="demo-accounts">
           <details>
-            <summary>Demo Accounts (For Testing)</summary>
+            <summary>Before you start, click here and check.</summary>
             <div className="demo-accounts-content">
-              <p><strong>Student:</strong> student@demo.com / password123</p>
-              <p><strong>Institute:</strong> institute@demo.com / password123</p>
-              <p><strong>Company:</strong> company@demo.com / password123</p>
-              <p><strong>Admin:</strong> admin@demo.com / password123</p>
+              <p>Rules for this platform must be followed</p>
+              <p>Failure to that will lead the admin to suspend your account.</p>
             </div>
           </details>
         </div>

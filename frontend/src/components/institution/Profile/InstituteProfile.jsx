@@ -1,6 +1,6 @@
 // src/components/institute/Profile/InstituteProfile.jsx
 import React, { useState, useEffect } from 'react';
-import useAuth from '../../../hooks/useAuth';
+import { useAuth } from '../../../contexts/AuthContext';
 import useApi from '../../../hooks/useApi';
 import useNotifications from '../../../hooks/useNotifications';
 import LoadingSpinner from '../../common/Loading/LoadingSpinner';
