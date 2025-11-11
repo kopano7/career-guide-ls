@@ -34,7 +34,7 @@ const Footer = () => {
         </div>
         
         <div className="footer-bottom">
-          <p>&copy; 2024 Career Guidance Platform - Lesotho. All rights reserved.</p>
+          <p>&copy; 2025 Career Guidance Platform - Lesotho. All rights reserved.</p>
         </div>
       </div>
     </footer>
