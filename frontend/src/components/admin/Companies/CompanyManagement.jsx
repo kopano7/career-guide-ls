@@ -68,7 +68,7 @@ const CompanyManagement = () => {
           companies.map(company => (
             <div key={company.id} className="company-card">
               <div className="company-header">
-                <div className="company-avatar">💼</div>
+                <div className="company-avatar"></div>
                 <div className="company-info">
                   <h3>{company.name}</h3>
                   <p className="company-email">{company.email}</p>
