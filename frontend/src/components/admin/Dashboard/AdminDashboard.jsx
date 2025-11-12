@@ -52,7 +52,7 @@ const AdminDashboard = () => {
         </div>
 
         <div className="stat-card">
-          <div className="stat-icon">🏫</div>
+          <div className="stat-icon"></div>
           <div className="stat-content">
             <div className="stat-number">{dashboardData?.totalInstitutes || 0}</div>
             <div className="stat-label">Institutions</div>
@@ -60,7 +60,7 @@ const AdminDashboard = () => {
         </div>
 
         <div className="stat-card">
-          <div className="stat-icon">💼</div>
+          <div className="stat-icon"></div>
           <div className="stat-content">
             <div className="stat-number">{dashboardData?.totalCompanies || 0}</div>
             <div className="stat-label">Companies</div>
@@ -68,7 +68,7 @@ const AdminDashboard = () => {
         </div>
 
         <div className="stat-card">
-          <div className="stat-icon">📚</div>
+          <div className="stat-icon"></div>
           <div className="stat-content">
             <div className="stat-number">{dashboardData?.totalCourses || 0}</div>
             <div className="stat-label">Courses</div>
@@ -76,7 +76,7 @@ const AdminDashboard = () => {
         </div>
 
         <div className="stat-card">
-          <div className="stat-icon">📨</div>
+          <div className="stat-icon"></div>
           <div className="stat-content">
             <div className="stat-number">{dashboardData?.pendingApprovals || 0}</div>
             <div className="stat-label">Pending Approvals</div>
@@ -84,7 +84,7 @@ const AdminDashboard = () => {
         </div>
 
         <div className="stat-card">
-          <div className="stat-icon">⚠️</div>
+          <div className="stat-icon"></div>
           <div className="stat-content">
             <div className="stat-number">{dashboardData?.reportedIssues || 0}</div>
             <div className="stat-label">Reported Issues</div>
@@ -128,15 +128,15 @@ const AdminDashboard = () => {
                 <span>Manage Users</span>
               </button>
               <button className="action-btn">
-                <span className="action-icon">🏫</span>
+                <span className="action-icon"></span>
                 <span>Institute Approvals</span>
               </button>
               <button className="action-btn">
-                <span className="action-icon">💼</span>
+                <span className="action-icon"></span>
                 <span>Company Approvals</span>
               </button>
               <button className="action-btn">
-                <span className="action-icon">📊</span>
+                <span className="action-icon"></span>
                 <span>View Reports</span>
               </button>
             </div>

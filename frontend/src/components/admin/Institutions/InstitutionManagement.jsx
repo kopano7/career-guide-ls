@@ -69,7 +69,7 @@ const InstituteManagement = () => {
           institutes.map(institute => (
             <div key={institute.id} className="institute-card">
               <div className="institute-header">
-                <div className="institute-avatar">🏫</div>
+                <div className="institute-avatar"></div>
                 <div className="institute-info">
                   <h3>{institute.name}</h3>
                   <p className="institute-email">{institute.email}</p>

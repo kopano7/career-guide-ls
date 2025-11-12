@@ -2,8 +2,8 @@
 import { useState, useCallback } from 'react';
 import { useNotification } from '../contexts/NotificationContext';
 
-// FIX: Remove /api from base URL since your routes are already mounted at /api
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://career-guide-ls.onrender.com';
+// API base URL - UPDATED to port 5000
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
 
 const useApi = () => {
   const [loading, setLoading] = useState(false);
