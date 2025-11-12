@@ -11,7 +11,7 @@ const AdminDashboard = () => {
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
   const [backendStatus, setBackendStatus] = useState('checking');
-  const [apiBaseUrl] = useState('http://localhost:5000');
+  const [apiBaseUrl] = useState('https://career-guide-ls.onrender.com');
 
   useEffect(() => {
     loadDashboardData();
