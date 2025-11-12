@@ -152,7 +152,7 @@ const Home = () => {
                 className="search-input"
               />
               <button className="search-btn">
-                🔍 Search
+                 Search
               </button>
             </div>
           </div>
@@ -348,7 +348,7 @@ const Home = () => {
                 </p>
                 <p className="institution-email">{institution.email}</p>
                 <div className="institution-status approved">
-                  ✓ Approved Institution
+                  Approved Institution
                 </div>
                 <Link 
                   to={`/institutions/${institution.id}`} 
