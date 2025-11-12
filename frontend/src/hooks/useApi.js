@@ -2,8 +2,8 @@
 import { useState, useCallback } from 'react';
 import { useNotification } from '../contexts/NotificationContext';
 
-// API base URL - UPDATED to port 5000
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://career-guide-ls.onrender.com/api';
+// API base URL - KEEP /api at the end
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://career-guide-ls.onrender.com';
 
 const useApi = () => {
   const [loading, setLoading] = useState(false);
@@ -17,11 +17,13 @@ const useApi = () => {
   const request = useCallback(async (endpoint, options = {}) => {
     const token = getToken();
     
-    // FIX: Ensure endpoint starts with /api
+    // ✅ FIX: REMOVE THE AUTOMATIC /api PREFIXING
+    // Just ensure endpoint starts with /
     let cleanEndpoint = endpoint;
-    if (!endpoint.startsWith('/api/')) {
-      cleanEndpoint = `/api${endpoint.startsWith('/') ? endpoint : `/${endpoint}`}`;
+    if (!cleanEndpoint.startsWith('/')) {
+      cleanEndpoint = `/${cleanEndpoint}`;
     }
+    // THAT'S IT! No more /api prefix logic
     
     const url = `${API_BASE_URL}${cleanEndpoint}`;
 
