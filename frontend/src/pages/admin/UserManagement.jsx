@@ -11,7 +11,7 @@ const UserManagement = () => {
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('all');
   const [backendStatus, setBackendStatus] = useState('checking');
-  const [apiBaseUrl] = useState('http://localhost:5000');
+  const [apiBaseUrl] = useState('https://career-guide-ls.onrender.com');
 
   // Test API connection directly
   const testApiConnection = async () => {
