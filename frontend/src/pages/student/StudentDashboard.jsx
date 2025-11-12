@@ -33,7 +33,6 @@ const StudentDashboard = () => {
           {/* Browse Courses */}
           <Link to="/student/courses" className="action-link">
             <div className="action-card">
-              <div className="action-icon">🎓</div>
               <h4>Browse Courses</h4>
               <p>Find courses to apply</p>
             </div>
@@ -42,7 +41,6 @@ const StudentDashboard = () => {
           {/* Find Jobs */}
           <Link to="/student/jobs" className="action-link">
             <div className="action-card">
-              <div className="action-icon"></div>
               <h4>Find Jobs</h4>
               <p>Explore job opportunities</p>
             </div>
@@ -60,7 +58,6 @@ const StudentDashboard = () => {
           {/* My Profile */}
           <Link to="/student/profile" className="action-link">
             <div className="action-card">
-              <div className="action-icon">👤</div>
               <h4>My Profile</h4>
               <p>Update your information</p>
             </div>
@@ -68,22 +65,6 @@ const StudentDashboard = () => {
         </div>
       </div>
 
-      {/* Recent Activity */}
-      <div className="recent-activity-section">
-        <h2>Recent Activity</h2>
-        <div className="activity-list">
-          {/* ... your activity items ... */}
-        </div>
-      </div>
-
-      {/* User Info Debug */}
-      <div className="debug-info">
-        <strong>Debug Info:</strong>
-        <div>Email: {user?.email}</div>
-        <div>Role: {user?.role}</div>
-        <div>ID: {user?.id}</div>
-        <div>Token: {localStorage.getItem('token') ? '✅ Present' : '❌ Missing'}</div>
-      </div>
     </div>
   );
 };
