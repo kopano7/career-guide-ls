@@ -7,6 +7,7 @@ import { publicAPI } from '../../services/api/public';
 import LoadingSpinner from '../../components/common/Loading/LoadingSpinner';
 import CourseCard from '../../components/student/Courses/CourseCard';
 import CourseFilters from '../../components/student/Courses/CourseFilters';
+import './CourseCatalog.css';
 
 const CourseCatalog = () => {
   const [courses, setCourses] = useState([]);
