@@ -80,7 +80,7 @@ const Login = () => {
     try {
       const result = await login(formData.email, formData.password);
       
-      console.log('📥 Login result:', result);
+      console.log('Login result:', result);
       
       if (result.success) {
         console.log('Login successful, user role:', result.user.role);

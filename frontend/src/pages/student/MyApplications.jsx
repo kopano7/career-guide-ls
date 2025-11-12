@@ -7,7 +7,7 @@ import LoadingSpinner from '../../components/common/Loading/LoadingSpinner';
 import ApplicationCard from '../../components/student/Applications/ApplicationCard';
 import AdmissionDecision from '../../components/student/Applications/AdmissionDecision';
 import AdmissionModal from '../../components/student/Applications/AdmissionModal';
-import './Applications.css';
+
 
 const MyApplications = () => {
   const [applications, setApplications] = useState([]);

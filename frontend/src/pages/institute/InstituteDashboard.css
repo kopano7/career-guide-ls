@@ -1,0 +1,124 @@
+:root {
+  --bg-color: #ffffff;
+  --text-color: #111111;
+  --subtext-color: #555555;
+  --card-bg: #ffffff;
+  --accent-color: #228B22;
+  --border-color: #228B22;
+  --shadow-color: rgba(34, 139, 34, 0.2);
+}
+
+[data-theme='dark'] {
+  --bg-color: #000000;
+  --text-color: #f5f5f5;
+  --subtext-color: #cccccc;
+  --card-bg: #111111;
+  --accent-color: #228B22;
+  --border-color: #228B22;
+  --shadow-color: rgba(34, 139, 34, 0.4);
+}
+
+/* Layout base */
+body, .dashboard-container {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: 'Inter', sans-serif;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+/* Headings and text */
+h1, h2, h3, h4 {
+  color: var(--text-color);
+}
+
+p, small {
+  color: var(--subtext-color);
+}
+
+/* General card/container style */
+.card, .dashboard-card, .quick-action, .recent-applications {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  box-shadow: 0 4px 8px var(--shadow-color);
+  transition: all 0.3s ease;
+  padding: 20px;
+}
+
+.card:hover, .dashboard-card:hover, .quick-action:hover, .recent-applications:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 12px var(--shadow-color);
+}
+
+/* Buttons */
+button {
+  background: var(--accent-color);
+  color: #ffffff;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+button:hover {
+  background: transparent;
+  color: var(--accent-color);
+  text-decoration: underline;
+}
+
+/* Quick actions */
+.quick-action {
+  text-align: center;
+  cursor: pointer;
+}
+
+.quick-action:hover {
+  border-color: var(--accent-color);
+  box-shadow: 0 4px 8px var(--shadow-color);
+}
+
+/* Underlines and links */
+a, h4:hover {
+  color: var(--accent-color);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+/* Responsive grid */
+.stats-grid, .quick-actions-grid {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+/* Theme switch button */
+.theme-toggle {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: 2px solid var(--accent-color);
+  color: var(--accent-color);
+  padding: 8px 12px;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.theme-toggle:hover {
+  background-color: var(--accent-color);
+  color: #fff;
+  text-decoration: none;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .dashboard-container {
+    padding: 10px;
+  }
+
+  button {
+    width: 100%;
+  }
+}

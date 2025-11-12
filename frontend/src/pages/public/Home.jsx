@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import './Home.css';
+//import './Home.css';
 
 const Home = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -194,9 +194,7 @@ const Home = () => {
               to={`/courses?category=${category.name.toLowerCase()}`}
               className="category-card"
             >
-              <div className="category-icon">
-                {['📊', '💻', '📈', '⚙️', '🏥', '🎨'][index]}
-              </div>
+              
               <h3>{category.name}</h3>
               <p>{category.count} courses available</p>
             </Link>

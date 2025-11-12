@@ -1,9 +1,11 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { useAuth }from '../../../contexts/AuthContext';
+import { useAuth } from '../../../contexts/AuthContext';
+import { useTheme } from '../../../contexts/ThemeContext'; // Import ThemeContext
 
 const Navigation = () => {
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated, user, logout } = useAuth();
+  const { theme, toggleTheme } = useTheme(); // Use theme context
   const location = useLocation();
 
   const isActive = (path) => {
@@ -97,6 +99,28 @@ const Navigation = () => {
           </li>
         ))}
       </ul>
+      
+      {/* Dark/Light mode toggle and Logout button */}
+      <div className="nav-controls">
+        {/* Dark/Light mode toggle using ThemeContext */}
+        <button 
+          onClick={toggleTheme}
+          className="theme-toggle-btn"
+          aria-label="Toggle dark/light mode"
+        >
+          {theme === 'dark' ? '☀️' : '🌙'}
+        </button>
+        
+        {/* Logout button - only show when authenticated */}
+        {isAuthenticated && (
+          <button 
+            onClick={logout}
+            className="logout-btn"
+          >
+            Logout
+          </button>
+        )}
+      </div>
     </nav>
   );
 };

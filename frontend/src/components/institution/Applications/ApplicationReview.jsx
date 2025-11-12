@@ -21,6 +21,53 @@ const ApplicationReview = ({
   const [feedback, setFeedback] = useState('');
   const [activeTab, setActiveTab] = useState('overview');
 
+  // Safe application data with fallbacks
+  const safeApplication = application || {};
+  const {
+    id: applicationId,
+    studentName = 'Unknown Student',
+    studentEmail = 'No email provided',
+    applicationNumber = 'N/A',
+    status = 'unknown',
+    courseName = 'Unknown Course',
+    appliedAt,
+    isQualified = false,
+    qualificationScore = 0,
+    qualificationDetails = [],
+    transcript,
+    course = {},
+    waitlistPosition
+  } = safeApplication;
+
+  // Early return if no application data
+  if (!application) {
+    return (
+      <div className="modal-overlay">
+        <div className="modal-content">
+          <div className="modal-header">
+            <h2 className="text-xl font-bold text-gray-900">Application Not Found</h2>
+            <button 
+              className="modal-close text-gray-400 hover:text-gray-600"
+              onClick={onClose}
+            >
+              ×
+            </button>
+          </div>
+          <div className="modal-body text-center py-8">
+            <div className="text-gray-400 text-4xl mb-4">❌</div>
+            <p className="text-gray-500 mb-4">Application data is not available.</p>
+            <button 
+              className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors"
+              onClick={onClose}
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   const handleAdmissionDecision = async (status) => {
     if (!window.confirm(`Are you sure you want to ${status} this application?`)) return;
 
@@ -28,18 +75,18 @@ const ApplicationReview = ({
       setUpdating(true);
       
       if (onAdmissionDecision) {
-        await onAdmissionDecision(application.id, status, feedback);
+        await onAdmissionDecision(applicationId, status, feedback);
       } else {
         // Fallback to direct API call
-        const response = await put(`/institute/applications/${application.id}`, {
+        const response = await put(`/institute/applications/${applicationId}`, {
           status: status,
           notes: feedback || undefined
         });
 
         if (response.data.success) {
           addNotification(`Application ${status} successfully!`, 'success');
-          onApplicationUpdate();
-          onClose();
+          onApplicationUpdate?.();
+          onClose?.();
         }
       }
     } catch (error) {
@@ -60,15 +107,15 @@ const ApplicationReview = ({
       setUpdating(true);
       
       if (onWaitlist) {
-        await onWaitlist(application.id);
+        await onWaitlist(applicationId);
       } else {
         // Fallback to direct API call
-        const response = await put(`/institute/applications/${application.id}/waitlist`);
+        const response = await put(`/institute/applications/${applicationId}/waitlist`);
         
         if (response.data.success) {
           addNotification('Application waitlisted successfully!', 'success');
-          onApplicationUpdate();
-          onClose();
+          onApplicationUpdate?.();
+          onClose?.();
         }
       }
     } catch (error) {
@@ -81,23 +128,27 @@ const ApplicationReview = ({
 
   const handleDownloadTranscript = () => {
     if (onDownloadTranscript) {
-      onDownloadTranscript(application);
-    } else {
+      onDownloadTranscript(safeApplication);
+    } else if (transcript?.url) {
       // Fallback download logic
       const link = document.createElement('a');
-      link.href = application.transcript.url;
-      link.download = `transcript_${application.studentName}.pdf`;
+      link.href = transcript.url;
+      link.download = `transcript_${studentName}.pdf`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
+    } else {
+      addNotification('Transcript not available for download', 'warning');
     }
   };
 
   const handleViewTranscript = () => {
     if (onViewTranscript) {
-      onViewTranscript(application);
+      onViewTranscript(safeApplication);
+    } else if (transcript?.url) {
+      window.open(transcript.url, '_blank');
     } else {
-      window.open(application.transcript.url, '_blank');
+      addNotification('Transcript not available for viewing', 'warning');
     }
   };
 
@@ -119,32 +170,32 @@ const ApplicationReview = ({
   };
 
   const renderQualificationDetails = () => {
-    if (!application.qualificationDetails || application.qualificationDetails.length === 0) {
+    if (!qualificationDetails || qualificationDetails.length === 0) {
       return <p className="text-gray-500">No specific qualification requirements for this course.</p>;
     }
 
     return (
       <div className="space-y-3">
-        {application.qualificationDetails.map((detail, index) => (
+        {qualificationDetails.map((detail, index) => (
           <div key={index} className={`p-3 rounded-lg border ${
             detail.meetsRequirement ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'
           }`}>
             <div className="flex justify-between items-center">
               <div>
-                <span className="font-medium">{detail.subject}</span>
+                <span className="font-medium">{detail.subject || 'Unknown Subject'}</span>
                 <span className="text-sm text-gray-600 ml-2">
                   {detail.isRequired ? '(Required)' : '(Optional)'}
                 </span>
               </div>
               <div className="text-sm">
                 <span className="text-gray-600">Required: </span>
-                <span className="font-medium">{detail.requiredGrade}</span>
+                <span className="font-medium">{detail.requiredGrade || 'N/A'}</span>
                 <span className="mx-2">→</span>
                 <span className="text-gray-600">Student: </span>
                 <span className={`font-medium ${
                   detail.meetsRequirement ? 'text-green-700' : 'text-red-700'
                 }`}>
-                  {detail.studentGrade}
+                  {detail.studentGrade || 'No grade'}
                 </span>
               </div>
             </div>
@@ -159,12 +210,12 @@ const ApplicationReview = ({
         <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
           <div className="flex justify-between items-center">
             <span className="font-medium">Overall Qualification Score:</span>
-            <span className="text-lg font-bold" style={{ color: getMatchScoreColor(application.qualificationScore || 0) }}>
-              {application.qualificationScore || 0}%
+            <span className="text-lg font-bold" style={{ color: getMatchScoreColor(qualificationScore) }}>
+              {qualificationScore}%
             </span>
           </div>
           <div className="mt-2 text-sm text-blue-700">
-            {application.isQualified 
+            {isQualified 
               ? 'Student meets all required qualifications' 
               : 'Student does not meet all required qualifications'
             }
@@ -175,7 +226,7 @@ const ApplicationReview = ({
   };
 
   const renderTranscriptSection = () => {
-    if (!application.transcript) {
+    if (!transcript) {
       return (
         <div className="text-center py-8 border-2 border-dashed border-gray-300 rounded-lg">
           <div className="text-gray-400 text-4xl mb-2">📄</div>
@@ -191,13 +242,13 @@ const ApplicationReview = ({
             <div className="flex items-center space-x-3">
               <div className="text-3xl">📄</div>
               <div>
-                <div className="font-medium text-gray-900">{application.transcript.name || 'Transcript.pdf'}</div>
+                <div className="font-medium text-gray-900">{transcript.name || 'Transcript.pdf'}</div>
                 <div className="text-sm text-gray-500">
-                  {application.transcript.size ? `${(application.transcript.size / 1024 / 1024).toFixed(2)} MB` : 'Size not available'}
+                  {transcript.size ? `${(transcript.size / 1024 / 1024).toFixed(2)} MB` : 'Size not available'}
                 </div>
-                {application.transcript.uploadedAt && (
+                {transcript.uploadedAt && (
                   <div className="text-sm text-gray-500">
-                    Uploaded: {new Date(application.transcript.uploadedAt).toLocaleDateString()}
+                    Uploaded: {new Date(transcript.uploadedAt).toLocaleDateString()}
                   </div>
                 )}
               </div>
@@ -205,13 +256,15 @@ const ApplicationReview = ({
             <div className="flex space-x-2">
               <button
                 onClick={handleViewTranscript}
-                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors disabled:bg-blue-300 disabled:cursor-not-allowed"
+                disabled={!transcript?.url}
               >
                 View Transcript
               </button>
               <button
                 onClick={handleDownloadTranscript}
-                className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors"
+                className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors disabled:bg-gray-100 disabled:cursor-not-allowed"
+                disabled={!transcript?.url}
               >
                 Download PDF
               </button>
@@ -219,11 +272,11 @@ const ApplicationReview = ({
           </div>
         </div>
         
-        {application.transcript.grades && (
+        {transcript.grades && (
           <div className="bg-gray-50 rounded-lg p-4">
             <h4 className="font-medium text-gray-900 mb-3">Transcript Summary</h4>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {Object.entries(application.transcript.grades).map(([subject, grade]) => (
+              {Object.entries(transcript.grades).map(([subject, grade]) => (
                 <div key={subject} className="text-center">
                   <div className="text-sm text-gray-600">{subject}</div>
                   <div className="font-medium text-gray-900">{grade}</div>
@@ -234,6 +287,16 @@ const ApplicationReview = ({
         )}
       </div>
     );
+  };
+
+  const formatDate = (dateString) => {
+    if (!dateString) return 'N/A';
+    try {
+      const date = new Date(dateString);
+      return date.toLocaleDateString() + ' at ' + date.toLocaleTimeString();
+    } catch (error) {
+      return 'Invalid date';
+    }
   };
 
   return (
@@ -255,17 +318,17 @@ const ApplicationReview = ({
           <div className="bg-white border-b border-gray-200 pb-4 mb-6">
             <div className="flex justify-between items-start">
               <div>
-                <h1 className="text-2xl font-bold text-gray-900">{application.studentName}</h1>
-                <p className="text-gray-600">{application.studentEmail}</p>
-                <p className="text-sm text-gray-500">Application: {application.applicationNumber}</p>
+                <h1 className="text-2xl font-bold text-gray-900">{studentName}</h1>
+                <p className="text-gray-600">{studentEmail}</p>
+                <p className="text-sm text-gray-500">Application: {applicationNumber}</p>
               </div>
               <div className="text-right">
-                <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(application.status)}`}>
-                  {application.status.charAt(0).toUpperCase() + application.status.slice(1)}
+                <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(status)}`}>
+                  {status.charAt(0).toUpperCase() + status.slice(1)}
                 </span>
-                {application.waitlistPosition && (
+                {waitlistPosition && (
                   <div className="text-sm text-blue-600 mt-1">
-                    Waitlist Position: #{application.waitlistPosition}
+                    Waitlist Position: #{waitlistPosition}
                   </div>
                 )}
               </div>
@@ -301,17 +364,16 @@ const ApplicationReview = ({
                     <div className="space-y-2">
                       <div>
                         <label className="text-sm text-gray-600">Full Name</label>
-                        <div className="font-medium">{application.studentName}</div>
+                        <div className="font-medium">{studentName}</div>
                       </div>
                       <div>
                         <label className="text-sm text-gray-600">Email</label>
-                        <div className="font-medium">{application.studentEmail}</div>
+                        <div className="font-medium">{studentEmail}</div>
                       </div>
                       <div>
                         <label className="text-sm text-gray-600">Applied Date</label>
                         <div className="font-medium">
-                          {new Date(application.appliedAt).toLocaleDateString()} at{' '}
-                          {new Date(application.appliedAt).toLocaleTimeString()}
+                          {formatDate(appliedAt)}
                         </div>
                       </div>
                     </div>
@@ -322,11 +384,11 @@ const ApplicationReview = ({
                     <div className="space-y-2">
                       <div>
                         <label className="text-sm text-gray-600">Course</label>
-                        <div className="font-medium">{application.courseName}</div>
+                        <div className="font-medium">{courseName}</div>
                       </div>
                       <div>
                         <label className="text-sm text-gray-600">Faculty</label>
-                        <div className="font-medium">{application.course?.faculty || 'Not specified'}</div>
+                        <div className="font-medium">{course?.faculty || 'Not specified'}</div>
                       </div>
                       <div>
                         <label className="text-sm text-gray-600">Qualification Status</label>
@@ -334,13 +396,13 @@ const ApplicationReview = ({
                           <div 
                             className="w-3 h-3 rounded-full"
                             style={{ 
-                              backgroundColor: application.isQualified ? '#10b981' : '#ef4444' 
+                              backgroundColor: isQualified ? '#10b981' : '#ef4444' 
                             }}
                           ></div>
                           <span className={`font-medium ${
-                            application.isQualified ? 'text-green-700' : 'text-red-700'
+                            isQualified ? 'text-green-700' : 'text-red-700'
                           }`}>
-                            {application.isQualified ? 'Qualified' : 'Not Qualified'}
+                            {isQualified ? 'Qualified' : 'Not Qualified'}
                           </span>
                         </div>
                       </div>
@@ -354,25 +416,25 @@ const ApplicationReview = ({
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
                     <div>
                       <div className="text-2xl font-bold text-blue-700">
-                        {application.qualificationScore || 0}%
+                        {qualificationScore}%
                       </div>
                       <div className="text-sm text-blue-600">Match Score</div>
                     </div>
                     <div>
                       <div className="text-2xl font-bold text-blue-700">
-                        {application.qualificationDetails?.filter(d => d.isRequired && d.meetsRequirement).length || 0}
+                        {qualificationDetails.filter(d => d.isRequired && d.meetsRequirement).length}
                       </div>
                       <div className="text-sm text-blue-600">Met Requirements</div>
                     </div>
                     <div>
                       <div className="text-2xl font-bold text-blue-700">
-                        {application.qualificationDetails?.filter(d => d.isRequired).length || 0}
+                        {qualificationDetails.filter(d => d.isRequired).length}
                       </div>
                       <div className="text-sm text-blue-600">Total Requirements</div>
                     </div>
                     <div>
                       <div className="text-2xl font-bold text-blue-700">
-                        {application.course?.availableSeats || 'N/A'}
+                        {course?.availableSeats || 'N/A'}
                       </div>
                       <div className="text-sm text-blue-600">Available Seats</div>
                     </div>
@@ -420,7 +482,7 @@ const ApplicationReview = ({
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <button
                     onClick={() => handleAdmissionDecision('rejected')}
-                    disabled={updating || application.status === 'rejected'}
+                    disabled={updating || status === 'rejected'}
                     className="bg-red-600 text-white py-3 px-4 rounded-md hover:bg-red-700 disabled:bg-red-300 disabled:cursor-not-allowed transition-colors"
                   >
                     {updating ? 'Processing...' : 'Reject Application'}
@@ -428,7 +490,7 @@ const ApplicationReview = ({
 
                   <button
                     onClick={handleWaitlist}
-                    disabled={updating || application.status === 'waitlisted'}
+                    disabled={updating || status === 'waitlisted'}
                     className="bg-blue-600 text-white py-3 px-4 rounded-md hover:bg-blue-700 disabled:bg-blue-300 disabled:cursor-not-allowed transition-colors"
                   >
                     {updating ? 'Processing...' : 'Waitlist Student'}
@@ -436,15 +498,15 @@ const ApplicationReview = ({
 
                   <button
                     onClick={() => handleAdmissionDecision('admitted')}
-                    disabled={updating || application.status === 'admitted' || !application.isQualified}
+                    disabled={updating || status === 'admitted' || !isQualified}
                     className="bg-green-600 text-white py-3 px-4 rounded-md hover:bg-green-700 disabled:bg-green-300 disabled:cursor-not-allowed transition-colors"
-                    title={!application.isQualified ? 'Cannot admit unqualified student' : ''}
+                    title={!isQualified ? 'Cannot admit unqualified student' : ''}
                   >
                     {updating ? 'Processing...' : 'Admit Student'}
                   </button>
                 </div>
 
-                {!application.isQualified && (
+                {!isQualified && (
                   <div className="bg-red-50 border border-red-200 rounded-lg p-4">
                     <p className="text-red-700 text-sm">
                       ⚠️ This student does not meet all course requirements and cannot be admitted.

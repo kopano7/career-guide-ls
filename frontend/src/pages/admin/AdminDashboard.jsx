@@ -11,7 +11,7 @@ const AdminDashboard = () => {
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
   const [backendStatus, setBackendStatus] = useState('checking');
-  const [apiBaseUrl] = useState('http://localhost:5000');
+  const [apiBaseUrl] = useState('https://career-guide-ls.onrender.com');
 
   useEffect(() => {
     loadDashboardData();
@@ -176,7 +176,7 @@ const AdminDashboard = () => {
       label: 'Manage Users',
       path: '/admin/users',
       color: '#3b82f6',
-      icon: '👥',
+      
       count: stats?.totalUsers,
       description: 'View and manage all users'
     },
@@ -184,7 +184,7 @@ const AdminDashboard = () => {
       label: 'Institute Approvals',
       path: '/admin/institute-approvals', 
       color: '#10b981',
-      icon: '🏫',
+      
       count: stats?.pendingApprovals,
       description: 'Review pending institute applications'
     },
@@ -192,7 +192,7 @@ const AdminDashboard = () => {
       label: 'Company Approvals',
       path: '/admin/company-approvals',
       color: '#f59e0b',
-      icon: '💼',
+      
       count: stats?.pendingApprovals,
       description: 'Review pending company registrations'
     },
@@ -200,7 +200,7 @@ const AdminDashboard = () => {
       label: 'View Courses',
       path: '/admin/courses',
       color: '#ef4444',
-      icon: '📚',
+      
       count: stats?.totalCourses,
       description: 'Browse all available courses'
     },
@@ -208,7 +208,7 @@ const AdminDashboard = () => {
       label: 'View Jobs',
       path: '/admin/jobs',
       color: '#8b5cf6',
-      icon: '💼',
+      
       count: stats?.totalJobs,
       description: 'Browse all job postings'
     },
@@ -216,7 +216,7 @@ const AdminDashboard = () => {
       label: 'System Settings',
       path: '/admin/settings',
       color: '#6b7280',
-      icon: '⚙️',
+      
       description: 'Platform configuration'
     }
   ];
@@ -258,7 +258,7 @@ const AdminDashboard = () => {
       <div className="admin-dashboard-header">
         <div className="header-content">
           <h1 className="page-title">
-            ⚙️ Admin Dashboard
+             Admin Dashboard
             <span className={`status-badge ${backendStatus}`}>
               {backendStatus === 'connected' ? 'LIVE' : 'DEMO'}
             </span>
@@ -269,10 +269,10 @@ const AdminDashboard = () => {
         </div>
         <div className="header-actions">
           <button className="test-btn" onClick={testBackendConnection}>
-            🔌 Test Connection
+             Test Connection
           </button>
           <button className="refresh-btn" onClick={refreshData}>
-            🔄 Refresh
+             Refresh
           </button>
           <button className="logout-btn" onClick={logout}>
             Logout
@@ -301,7 +301,7 @@ const AdminDashboard = () => {
         </h2>
         <div className="stats-grid">
           <div className="stat-card">
-            <div className="stat-icon">👥</div>
+            
             <div className="stat-content">
               <h3 className="stat-number">{stats?.totalUsers || 0}</h3>
               <p className="stat-label">Total Users</p>
@@ -323,7 +323,7 @@ const AdminDashboard = () => {
           </div>
 
           <div className="stat-card highlight">
-            <div className="stat-icon">⏳</div>
+            
             <div className="stat-content">
               <h3 className="stat-number">{stats?.pendingApprovals || 0}</h3>
               <p className="stat-label">Pending Approvals</p>
@@ -334,7 +334,7 @@ const AdminDashboard = () => {
           </div>
 
           <div className="stat-card">
-            <div className="stat-icon">📚</div>
+          
             <div className="stat-content">
               <h3 className="stat-number">{stats?.totalCourses || 0}</h3>
               <p className="stat-label">Total Courses</p>
@@ -345,7 +345,7 @@ const AdminDashboard = () => {
           </div>
 
           <div className="stat-card">
-            <div className="stat-icon">📝</div>
+            
             <div className="stat-content">
               <h3 className="stat-number">{stats?.totalApplications || 0}</h3>
               <p className="stat-label">Applications</p>
@@ -356,7 +356,7 @@ const AdminDashboard = () => {
           </div>
 
           <div className="stat-card">
-            <div className="stat-icon">💼</div>
+          
             <div className="stat-content">
               <h3 className="stat-number">{stats?.totalJobs || 0}</h3>
               <p className="stat-label">Active Jobs</p>
@@ -367,7 +367,7 @@ const AdminDashboard = () => {
           </div>
 
           <div className="stat-card">
-            <div className="stat-icon">🔄</div>
+            
             <div className="stat-content">
               <h3 className="stat-number">24</h3>
               <p className="stat-label">Active Today</p>

@@ -5,7 +5,6 @@ import { useNotification } from '../../contexts/NotificationContext';
 import LoadingSpinner from '../../components/common/Loading/LoadingSpinner';
 import JobCard from '../../components/student/Jobs/JobCard';
 import JobFilters from '../../components/student/Jobs/JobFilters';
-import './JobPortal.css';
 
 const JobPortal = () => {
   const [jobs, setJobs] = useState([]);

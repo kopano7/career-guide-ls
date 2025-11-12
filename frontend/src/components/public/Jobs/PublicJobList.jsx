@@ -1,14 +1,16 @@
 // src/components/public/Jobs/PublicJobList.jsx
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import useApi from '../../../hooks/useApi';
 import useNotifications from '../../../hooks/useNotifications';
 import LoadingSpinner from '../../common/Loading/LoadingSpinner';
-import './PublicJobList.css';
+import { useAuth } from '../../../contexts/AuthContext';
 
 const PublicJobList = () => {
   const { get } = useApi();
   const { addNotification } = useNotifications();
+  const { user, isAuthenticated } = useAuth();
+  const navigate = useNavigate();
   
   const [jobs, setJobs] = useState([]);
   const [filteredJobs, setFilteredJobs] = useState([]);
@@ -31,16 +33,61 @@ const PublicJobList = () => {
 
   const fetchJobs = async () => {
     try {
-      const response = await get('/public/jobs');
-      if (response.data.success) {
-        setJobs(response.data.jobs);
+      setLoading(true);
+      // Use the correct endpoint from your publicRoutes.js
+      const response = await get('/api/public/jobs');
+      
+      console.log('💼 API Response:', response);
+      
+      // Match the response structure from your backend publicRoutes.js
+      if (response && response.success) {
+        const jobsData = response.data?.jobs || [];
+        setJobs(jobsData);
+        console.log('✅ Fetched jobs:', jobsData.length);
+      } else {
+        console.error('❌ Unexpected response format:', response);
+        addNotification('Failed to load jobs from server', 'error');
       }
     } catch (error) {
-      console.error('Error fetching jobs:', error);
+      console.error('❌ Error fetching jobs:', error);
       addNotification('Error loading jobs. Please try again.', 'error');
     } finally {
       setLoading(false);
     }
+  };
+
+  // Handle View Details click
+  const handleViewDetails = (jobId, jobTitle, e) => {
+    if (!isAuthenticated) {
+      e.preventDefault();
+      addNotification('Please register or login to view job details', 'info');
+      navigate('/register', { 
+        state: { 
+          redirectTo: `/jobs/${jobId}`,
+          message: `Register to view detailed information about: ${jobTitle}`
+        }
+      });
+    }
+    // If authenticated, let the Link work normally
+  };
+
+  // Handle Apply Now click
+  const handleApplyNow = (jobId, jobTitle, companyName, e) => {
+    if (!isAuthenticated) {
+      e.preventDefault();
+      addNotification('Please register as a student to apply for this job', 'info');
+      navigate('/register', { 
+        state: { 
+          redirectTo: `/apply/job/${jobId}`,
+          message: `Register as a student to apply for: ${jobTitle} at ${companyName}`,
+          preferredRole: 'student'
+        }
+      });
+    } else if (user?.role !== 'student') {
+      e.preventDefault();
+      addNotification('Only students can apply for jobs. Please login with a student account.', 'warning');
+    }
+    // If authenticated as student, let the Link work normally
   };
 
   const applyFilters = () => {
@@ -59,7 +106,8 @@ const PublicJobList = () => {
     if (filters.jobType) {
       filtered = filtered.filter(job => 
         job.jobType?.toLowerCase() === filters.jobType.toLowerCase() ||
-        job.type?.toLowerCase() === filters.jobType.toLowerCase()
+        job.type?.toLowerCase() === filters.jobType.toLowerCase() ||
+        job.employmentType?.toLowerCase() === filters.jobType.toLowerCase()
       );
     }
 
@@ -85,7 +133,7 @@ const PublicJobList = () => {
       );
     }
 
-    // Sorting
+    // Sorting with fallbacks
     filtered.sort((a, b) => {
       switch (filters.sortBy) {
         case 'title':
@@ -93,7 +141,7 @@ const PublicJobList = () => {
         case 'company':
           return (a.companyName || '').localeCompare(b.companyName || '');
         case 'date':
-          return new Date(b.createdAt || b.postedDate) - new Date(a.createdAt || a.postedDate);
+          return new Date(b.createdAt || b.postedDate || 0) - new Date(a.createdAt || a.postedDate || 0);
         case 'salary':
           return (b.salary || b.salaryRange || 0) - (a.salary || a.salaryRange || 0);
         default:
@@ -121,14 +169,14 @@ const PublicJobList = () => {
     });
   };
 
-  // Get unique values for filters
+  // Get unique values for filters from actual job data
   const industries = [...new Set(jobs
     .map(job => job.industry || job.category)
     .filter(Boolean)
   )].sort();
 
   const jobTypes = [...new Set(jobs
-    .map(job => job.jobType || job.type)
+    .map(job => job.jobType || job.type || job.employmentType)
     .filter(Boolean)
   )].sort();
 
@@ -149,42 +197,86 @@ const PublicJobList = () => {
 
   const formatDate = (dateString) => {
     if (!dateString) return 'Not specified';
-    return new Date(dateString).toLocaleDateString('en-LS', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
+    try {
+      const date = dateString?.toDate ? dateString.toDate() : new Date(dateString);
+      return date.toLocaleDateString('en-LS', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+    } catch (error) {
+      return 'Invalid date';
+    }
   };
 
   const getDaysAgo = (dateString) => {
     if (!dateString) return '';
-    const postedDate = new Date(dateString);
-    const today = new Date();
-    const diffTime = Math.abs(today - postedDate);
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    
-    if (diffDays === 1) return '1 day ago';
-    if (diffDays < 7) return `${diffDays} days ago`;
-    if (diffDays < 30) return `${Math.ceil(diffDays / 7)} weeks ago`;
-    return `${Math.ceil(diffDays / 30)} months ago`;
+    try {
+      const postedDate = dateString?.toDate ? dateString.toDate() : new Date(dateString);
+      const today = new Date();
+      const diffTime = Math.abs(today - postedDate);
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      
+      if (diffDays === 1) return '1 day ago';
+      if (diffDays < 7) return `${diffDays} days ago`;
+      if (diffDays < 30) return `${Math.ceil(diffDays / 7)} weeks ago`;
+      return `${Math.ceil(diffDays / 30)} months ago`;
+    } catch (error) {
+      return 'Recently';
+    }
   };
 
   const isNewJob = (dateString) => {
     if (!dateString) return false;
-    const postedDate = new Date(dateString);
-    const today = new Date();
-    const diffTime = Math.abs(today - postedDate);
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    return diffDays <= 7; // New if posted within last 7 days
+    try {
+      const postedDate = dateString?.toDate ? dateString.toDate() : new Date(dateString);
+      const today = new Date();
+      const diffTime = Math.abs(today - postedDate);
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      return diffDays <= 7; // New if posted within last 7 days
+    } catch (error) {
+      return false;
+    }
   };
 
-  if (loading) return <LoadingSpinner />;
+  // Show authentication prompt for public users
+  const AuthPrompt = () => (
+    <div className="auth-prompt">
+      <div className="auth-prompt-content">
+        <h4>💼 Create a Student Account</h4>
+        <p>Register as a student to view job details and apply for career opportunities</p>
+        <div className="auth-prompt-actions">
+          <Link to="/register" className="btn-primary">
+            Register as Student
+          </Link>
+          <Link to="/login" className="btn-outline">
+            Login
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+
+  if (loading) {
+    return (
+      <div className="loading-container">
+        <LoadingSpinner />
+        <p>Loading job opportunities from companies in Lesotho...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="public-job-list">
       <div className="page-header">
         <h1>Job Opportunities</h1>
-        <p>Discover {jobs.length} career opportunities from leading companies in Lesotho</p>
+        <p>
+          Discover {jobs.length} active career opportunities from leading companies in Lesotho
+          {jobs.length > 0 && ` • ${filteredJobs.length} match your filters`}
+        </p>
+        
+        {/* Show auth prompt for non-authenticated users */}
+        {!isAuthenticated && <AuthPrompt />}
       </div>
 
       {/* Filters Section */}
@@ -311,6 +403,11 @@ const PublicJobList = () => {
             Available Jobs 
             <span className="results-count">({filteredJobs.length} of {jobs.length})</span>
           </h2>
+          {!isAuthenticated && (
+            <div className="auth-reminder">
+              <span>🔐 Register as student to apply for jobs</span>
+            </div>
+          )}
         </div>
 
         {filteredJobs.length > 0 ? (
@@ -321,11 +418,13 @@ const PublicJobList = () => {
                   {isNewJob(job.createdAt || job.postedDate) && (
                     <div className="job-badge new">NEW</div>
                   )}
-                  <div className="job-status">
-                    {job.status === 'active' ? 'ACTIVE' : job.status?.toUpperCase()}
+                  <div className={`job-status ${job.status === 'active' ? 'active' : 'inactive'}`}>
+                    {job.status === 'active' ? 'ACTIVE' : job.status?.toUpperCase() || 'INACTIVE'}
                   </div>
-                  <h3 className="job-title">{job.title}</h3>
-                  <div className="company-name">{job.companyName}</div>
+                  <h3 className="job-title">{job.title || 'Untitled Position'}</h3>
+                  <div className="company-name">
+                    🏢 {job.companyName || 'Unknown Company'}
+                  </div>
                 </div>
 
                 <div className="job-meta">
@@ -336,7 +435,7 @@ const PublicJobList = () => {
                   <div className="meta-item">
                     <span className="label">⏱️</span>
                     <span className="value">
-                      {job.jobType || job.type || 'Full-time'}
+                      {job.jobType || job.type || job.employmentType || 'Full-time'}
                     </span>
                   </div>
                   <div className="meta-item">
@@ -390,31 +489,65 @@ const PublicJobList = () => {
                     <Link 
                       to={`/jobs/${job.id}`}
                       className="btn-outline"
+                      onClick={(e) => handleViewDetails(
+                        job.id, 
+                        job.title || 'this job', 
+                        e
+                      )}
                     >
-                      View Details
+                      {isAuthenticated ? 'View Details' : 'View Details 🔒'}
                     </Link>
                     <Link 
                       to={`/apply/job/${job.id}`}
                       className="btn-primary"
+                      onClick={(e) => handleApplyNow(
+                        job.id, 
+                        job.title || 'this job',
+                        job.companyName || 'the company',
+                        e
+                      )}
                     >
-                      Apply Now
+                      {isAuthenticated ? 'Apply Now' : 'Apply Now 🔒'}
                     </Link>
                   </div>
+                </div>
+
+                {/* Show message for non-students */}
+                {isAuthenticated && user?.role !== 'student' && (
+                  <div className="role-warning">
+                    <small>⚠️ Only student accounts can apply for jobs</small>
+                  </div>
+                )}
+
+                {/* Job metadata */}
+                <div className="job-meta-footer">
+                  <small>
+                    ID: {job.id} • 
+                    Posted: {formatDate(job.createdAt || job.postedDate)}
+                    {job.updatedAt && ` • Updated: ${formatDate(job.updatedAt)}`}
+                  </small>
                 </div>
               </div>
             ))}
           </div>
         ) : (
           <div className="empty-state">
-            <div className="empty-icon">💼</div>
+            <div className="empty-icon"></div>
             <h3>No jobs found</h3>
-            <p>Try adjusting your filters or search terms to find what you're looking for.</p>
-            <button 
-              className="btn-secondary"
-              onClick={clearFilters}
-            >
-              Clear All Filters
-            </button>
+            <p>
+              {jobs.length === 0 
+                ? 'No active job opportunities are currently available.' 
+                : 'Try adjusting your filters or search terms to find what you\'re looking for.'
+              }
+            </p>
+            {jobs.length > 0 && (
+              <button 
+                className="btn-secondary"
+                onClick={clearFilters}
+              >
+                Clear All Filters
+              </button>
+            )}
           </div>
         )}
       </div>

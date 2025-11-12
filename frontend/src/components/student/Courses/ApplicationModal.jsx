@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../../contexts/AuthContext';
 import LoadingSpinner from '../../common/Loading/LoadingSpinner';
-import './ApplicationModal.css';
+//import './ApplicationModal.css';
 
 const ApplicationModal = ({ course, onClose, onSubmit, loading }) => {
   const [grades, setGrades] = useState({});

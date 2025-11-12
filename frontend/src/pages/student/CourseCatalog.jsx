@@ -7,7 +7,6 @@ import { publicAPI } from '../../services/api/public';
 import LoadingSpinner from '../../components/common/Loading/LoadingSpinner';
 import CourseCard from '../../components/student/Courses/CourseCard';
 import CourseFilters from '../../components/student/Courses/CourseFilters';
-import './CourseCatalog.css';
 
 const CourseCatalog = () => {
   const [courses, setCourses] = useState([]);
@@ -384,7 +383,7 @@ const CourseCatalog = () => {
         return {
           type: 'info',
           text: 'Already Applied',
-          icon: ''
+          
         };
       }
 
@@ -392,7 +391,7 @@ const CourseCatalog = () => {
         return {
           type: 'warning',
           text: 'Institution limit reached',
-          icon: ''
+          
         };
       }
 
@@ -400,7 +399,7 @@ const CourseCatalog = () => {
         return {
           type: 'error',
           text: 'Upload transcript to apply',
-          icon: ''
+         
         };
       }
 
@@ -408,7 +407,7 @@ const CourseCatalog = () => {
         return {
           type: 'warning',
           text: 'Transcript verification pending',
-          icon: ''
+          
         };
       }
 
@@ -416,14 +415,14 @@ const CourseCatalog = () => {
         return {
           type: 'error',
           text: 'Requirements not met',
-          icon: ''
+          
         };
       }
 
       return {
         type: 'success',
         text: 'Eligible to apply',
-        icon: ''
+        
       };
     };
 
@@ -465,11 +464,6 @@ const CourseCatalog = () => {
           <h1>Course Catalog </h1>
           <p>Discover courses from approved institutions in Lesotho</p>
           <div style={{ 
-            background: '#e8f5e8', 
-            padding: '8px 12px', 
-            borderRadius: '4px', 
-            marginTop: '8px',
-            fontSize: '0.9rem'
           }}>
             <strong>Live Data:</strong> Connected to real courses and your profile
           </div>
@@ -484,23 +478,6 @@ const CourseCatalog = () => {
         </div>
       </div>
 
-      {/* Debug Info */}
-      <div style={{ 
-        background: '#f8f9fa', 
-        padding: '10px', 
-        marginBottom: '20px', 
-        borderRadius: '5px',
-        fontSize: '12px',
-        border: '1px solid #e9ecef'
-      }}>
-        <strong>Debug Info:</strong> 
-        Courses: {courses.length} | 
-        Institutions: {institutions.length} | 
-        Your Applications: {totalApplications} |
-        Profile: {hasGrades ? 'Has Grades' : 'No Grades'} | 
-        Transcript: {hasTranscript ? (isTranscriptVerified ? 'Verified' : 'Pending') : 'None'}
-      </div>
-
       {/* Application Requirements Status */}
       <div className="requirements-status-banner">
         <div className="banner-content">
@@ -510,7 +487,7 @@ const CourseCatalog = () => {
             <div className="requirements-list">
               <div className={`requirement-item ${hasGrades ? 'met' : 'pending'}`}>
                 <span className="requirement-icon">
-                  {hasGrades ? '✅' : '❌'}
+                  {hasGrades ? 'Yes' : 'No'}
                 </span>
                 <span className="requirement-text">
                   <strong>Academic Grades:</strong> 
@@ -520,7 +497,7 @@ const CourseCatalog = () => {
               
               <div className={`requirement-item ${hasTranscript ? 'met' : 'pending'}`}>
                 <span className="requirement-icon">
-                  {hasTranscript ? (isTranscriptVerified ? '✅' : '⏳') : '❌'}
+                  {hasTranscript ? (isTranscriptVerified ? 'Yes' : 'Pending') : 'No'}
                 </span>
                 <span className="requirement-text">
                   <strong>Academic Transcript:</strong> 

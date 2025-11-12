@@ -12,18 +12,18 @@ const CompanyApproval = () => {
   const [loading, setLoading] = useState(true);
   const [processing, setProcessing] = useState({});
   const [backendStatus, setBackendStatus] = useState('checking');
-  const [apiBaseUrl] = useState('http://localhost:5000');
+  const [apiBaseUrl] = useState('https://career-guide-ls.onrender.com');
 
   // Redirect if not authenticated or not admin
   useEffect(() => {
     if (!isAuthenticated) {
-      console.log('🔐 Not authenticated, redirecting to login...');
+      console.log(' Not authenticated, redirecting to login...');
       navigate('/login');
       return;
     }
     
     if (user?.role !== 'admin') {
-      console.log('🚫 User is not admin, redirecting...');
+      console.log('User is not admin, redirecting...');
       alert('Access denied. Admin privileges required.');
       navigate('/dashboard');
       return;
@@ -34,7 +34,7 @@ const CompanyApproval = () => {
 
   const fetchPendingCompanies = async () => {
     try {
-      console.log('🔄 Fetching pending companies from backend...');
+      console.log(' Fetching pending companies from backend...');
       
       const token = localStorage.getItem('token');
       if (!token) {
@@ -228,7 +228,7 @@ const CompanyApproval = () => {
 
   const viewCompanyDetails = (company) => {
     const details = `
-🏢 Company Details:
+ Company Details:
 
 Name: ${company.name}
 Email: ${company.email}
@@ -271,7 +271,7 @@ Registered: ${company.createdAt ? new Date(company.createdAt).toLocaleDateString
       <div className="page-header">
         <div className="header-content">
           <h1 className="page-title">
-            🏢 Company Approvals
+            Company Approvals
             <span className={`status-badge ${backendStatus}`}>
               {backendStatus === 'connected' ? 'LIVE' : 'DEMO'}
             </span>
@@ -289,13 +289,13 @@ Registered: ${company.createdAt ? new Date(company.createdAt).toLocaleDateString
           </div>
           <div className="header-actions">
             <button className="btn-refresh" onClick={fetchPendingCompanies}>
-              🔄 Refresh
+             Refresh
             </button>
             <button 
               className="btn-test" 
               onClick={testBackendConnection}
             >
-              🔌 Test Connection
+               Test Connection
             </button>
           </div>
         </div>
@@ -305,7 +305,7 @@ Registered: ${company.createdAt ? new Date(company.createdAt).toLocaleDateString
       {backendStatus !== 'connected' && (
         <div className="connection-banner warning">
           <div className="banner-content">
-            <span className="banner-icon">⚠️</span>
+            
             <div className="banner-text">
               <strong>Backend Connection Issue</strong>
               <p>Displaying demo data. Real company data will appear when backend is connected.</p>
@@ -339,11 +339,11 @@ Registered: ${company.createdAt ? new Date(company.createdAt).toLocaleDateString
                       </div>
                       <div className="company-main">
                         <h4 className="company-name">{company.name}</h4>
-                        <p className="company-email">📧 {company.email}</p>
-                        <p className="company-phone">📞 {company.phoneNumber || 'No phone provided'}</p>
+                        <p className="company-email"> {company.email}</p>
+                        <p className="company-phone"> {company.phoneNumber || 'No phone provided'}</p>
                         {company.website && (
                           <p className="company-website">
-                            🌐{' '}
+                            {' '}
                             <button 
                               className="website-link"
                               onClick={() => openWebsite(company.website)}
@@ -365,26 +365,26 @@ Registered: ${company.createdAt ? new Date(company.createdAt).toLocaleDateString
                     <div className="company-details">
                       <div className="detail-grid">
                         <div className="detail-item">
-                          <strong>🏭 Industry:</strong>
+                          <strong> Industry:</strong>
                           <span>{company.industry || 'Not specified'}</span>
                         </div>
                         <div className="detail-item">
-                          <strong>👥 Company Size:</strong>
+                          <strong> Company Size:</strong>
                           <span>{company.companySize || 'Not specified'}</span>
                         </div>
                         <div className="detail-item">
-                          <strong>📅 Founded:</strong>
+                          <strong> Founded:</strong>
                           <span>{company.foundedYear || 'Not specified'}</span>
                         </div>
                         <div className="detail-item">
-                          <strong>📍 Address:</strong>
+                          <strong>Address:</strong>
                           <span>{company.address || 'Not provided'}</span>
                         </div>
                       </div>
 
                       {company.description && (
                         <div className="company-description">
-                          <strong>📝 Company Description:</strong>
+                          <strong> Company Description:</strong>
                           <p className="description-text">{company.description}</p>
                         </div>
                       )}
@@ -396,7 +396,7 @@ Registered: ${company.createdAt ? new Date(company.createdAt).toLocaleDateString
                           className="btn-view"
                           onClick={() => viewCompanyDetails(company)}
                         >
-                          👁️ View Details
+                           View Details
                         </button>
                         <button 
                           className="btn-success"

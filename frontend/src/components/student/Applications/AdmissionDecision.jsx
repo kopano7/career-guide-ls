@@ -1,6 +1,6 @@
 // src/components/student/Applications/AdmissionDecision.jsx
 import React from 'react';
-import './AdmissionDecision.css';
+
 
 const AdmissionDecision = ({ application, onAccept, onDecline }) => {
   const getDecisionBadge = () => {

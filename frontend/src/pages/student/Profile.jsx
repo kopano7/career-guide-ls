@@ -6,7 +6,7 @@ import useNotifications from '../../hooks/useNotifications';
 import LoadingSpinner from '../../components/common/Loading/LoadingSpinner';
 import StudentProfile from '../../components/student/Profile/StudentProfile';
 import TranscriptUpload from '../../components/student/Profile/TranscriptUpload';
-import './Profile.css';
+
 
 const Profile = () => {
   const { user } = useAuth();

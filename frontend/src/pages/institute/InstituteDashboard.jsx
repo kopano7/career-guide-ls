@@ -2,12 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { instituteAPI } from '../../services/api/institute';
 import LoadingSpinner from '../../components/common/Loading/LoadingSpinner';
+import { useNavigate } from 'react-router-dom';
+import './InstituteDashboard.css';
 
 const InstituteDashboard = () => {
   const { user, logout } = useAuth();
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchDashboardData();
@@ -17,10 +20,10 @@ const InstituteDashboard = () => {
     try {
       setLoading(true);
       setError(null);
-      console.log('📊 Fetching institute dashboard data...');
+      console.log('Fetching institute dashboard data...');
       
       const response = await instituteAPI.getDashboardData();
-      console.log('📥 Dashboard API response:', response);
+      console.log('Dashboard API response:', response);
       
       if (response.success) {
         setDashboardData(response.data);
@@ -37,9 +40,24 @@ const InstituteDashboard = () => {
 
   const handleQuickAction = (action) => {
     // Navigate to different pages based on action
-    console.log('🚀 Quick action:', action);
-    // You can use react-router navigation here
-    // navigate(`/institute/${action}`);
+    console.log('Quick action:', action);
+    
+    switch (action) {
+      case 'courses':
+        navigate('/institute/courses');
+        break;
+      case 'applications':
+        navigate('/institute/applications');
+        break;
+      case 'profile':
+        navigate('/institute/profile');
+        break;
+      case 'reports':
+        navigate('/institute/reports');
+        break;
+      default:
+        console.log('Unknown action:', action);
+    }
   };
 
   if (loading) {
@@ -71,9 +89,9 @@ const InstituteDashboard = () => {
 
   const { stats, recentApplications } = dashboardData || {};
 
-  console.log('🎯 InstituteDashboard: User data:', user);
-  console.log('📊 Dashboard stats:', stats);
-  console.log('📝 Recent applications:', recentApplications);
+  console.log('InstituteDashboard: User data:', user);
+  console.log('Dashboard stats:', stats);
+  console.log('Recent applications:', recentApplications);
 
   return (
     <div style={{ 
@@ -91,7 +109,7 @@ const InstituteDashboard = () => {
         borderBottom: '1px solid #e0e0e0'
       }}>
         <div>
-          <h1 style={{ margin: 0, color: '#333' }}>🏫 Institute Dashboard</h1>
+          <h1 style={{ margin: 0, color: '#333' }}>Institute Dashboard</h1>
           <p style={{ margin: '5px 0 0 0', color: '#666' }}>
             Welcome, {user?.institutionName || user?.name || user?.email}!
           </p>
@@ -138,7 +156,7 @@ const InstituteDashboard = () => {
           boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
           textAlign: 'center'
         }}>
-          <div style={{ fontSize: '24px', marginBottom: '8px' }}>📚</div>
+          <div style={{ fontSize: '24px', marginBottom: '8px' }}></div>
           <h3 style={{ margin: 0, fontSize: '24px' }}>
             {stats?.totalCourses || 0}
           </h3>
@@ -152,7 +170,7 @@ const InstituteDashboard = () => {
           boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
           textAlign: 'center'
         }}>
-          <div style={{ fontSize: '24px', marginBottom: '8px' }}>📝</div>
+          <div style={{ fontSize: '24px', marginBottom: '8px' }}></div>
           <h3 style={{ margin: 0, fontSize: '24px' }}>
             {stats?.totalApplications || 0}
           </h3>
@@ -166,7 +184,7 @@ const InstituteDashboard = () => {
           boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
           textAlign: 'center'
         }}>
-          <div style={{ fontSize: '24px', marginBottom: '8px' }}>⏳</div>
+          <div style={{ fontSize: '24px', marginBottom: '8px' }}></div>
           <h3 style={{ margin: 0, fontSize: '24px' }}>
             {stats?.pendingApplications || 0}
           </h3>
@@ -180,7 +198,7 @@ const InstituteDashboard = () => {
           boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
           textAlign: 'center'
         }}>
-          <div style={{ fontSize: '24px', marginBottom: '8px' }}>✅</div>
+          <div style={{ fontSize: '24px', marginBottom: '8px' }}></div>
           <h3 style={{ margin: 0, fontSize: '24px' }}>
             {stats?.admittedStudents || 0}
           </h3>
@@ -195,7 +213,7 @@ const InstituteDashboard = () => {
           boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
           textAlign: 'center'
         }}>
-          <div style={{ fontSize: '24px', marginBottom: '8px' }}>🎯</div>
+          <div style={{ fontSize: '24px', marginBottom: '8px' }}></div>
           <h3 style={{ margin: 0, fontSize: '24px' }}>
             {stats?.qualifiedApplications || 0}
           </h3>
@@ -209,7 +227,7 @@ const InstituteDashboard = () => {
           boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
           textAlign: 'center'
         }}>
-          <div style={{ fontSize: '24px', marginBottom: '8px' }}>🪑</div>
+          <div style={{ fontSize: '24px', marginBottom: '8px' }}></div>
           <h3 style={{ margin: 0, fontSize: '24px' }}>
             {stats?.availableSeats || 0}
           </h3>
@@ -244,7 +262,7 @@ const InstituteDashboard = () => {
             onMouseEnter={(e) => e.target.style.background = '#f8fafc'}
             onMouseLeave={(e) => e.target.style.background = 'white'}
           >
-            <div style={{ fontSize: '24px', marginBottom: '10px' }}>➕</div>
+            <div style={{ fontSize: '24px', marginBottom: '10px' }}></div>
             <h4 style={{ margin: 0 }}>Add Course</h4>
             <p style={{ margin: '5px 0 0 0', color: '#666', fontSize: '14px' }}>
               Create new course offering
@@ -264,7 +282,7 @@ const InstituteDashboard = () => {
             onMouseEnter={(e) => e.target.style.background = '#f8fafc'}
             onMouseLeave={(e) => e.target.style.background = 'white'}
           >
-            <div style={{ fontSize: '24px', marginBottom: '10px' }}>📋</div>
+            <div style={{ fontSize: '24px', marginBottom: '10px' }}></div>
             <h4 style={{ margin: 0 }}>Review Applications</h4>
             <p style={{ margin: '5px 0 0 0', color: '#666', fontSize: '14px' }}>
               Process student applications
@@ -284,7 +302,7 @@ const InstituteDashboard = () => {
             onMouseEnter={(e) => e.target.style.background = '#f8fafc'}
             onMouseLeave={(e) => e.target.style.background = 'white'}
           >
-            <div style={{ fontSize: '24px', marginBottom: '10px' }}>🏫</div>
+            <div style={{ fontSize: '24px', marginBottom: '10px' }}></div>
             <h4 style={{ margin: 0 }}>Institute Profile</h4>
             <p style={{ margin: '5px 0 0 0', color: '#666', fontSize: '14px' }}>
               Update institution info
@@ -304,7 +322,7 @@ const InstituteDashboard = () => {
             onMouseEnter={(e) => e.target.style.background = '#f8fafc'}
             onMouseLeave={(e) => e.target.style.background = 'white'}
           >
-            <div style={{ fontSize: '24px', marginBottom: '10px' }}>📊</div>
+            <div style={{ fontSize: '24px', marginBottom: '10px' }}></div>
             <h4 style={{ margin: 0 }}>Reports</h4>
             <p style={{ margin: '5px 0 0 0', color: '#666', fontSize: '14px' }}>
               View admission analytics
@@ -361,14 +379,14 @@ const InstituteDashboard = () => {
                 <div style={{ fontSize: '20px' }}>
                   {application.status === 'pending' ? '⏳' : 
                    application.status === 'admitted' ? '✅' : 
-                   application.status === 'rejected' ? '❌' : '📄'}
+                   application.status === 'rejected' ? '❌' : ''}
                 </div>
                 <div style={{ flex: 1 }}>
                   <h4 style={{ margin: 0 }}>{application.courseName}</h4>
                   <p style={{ margin: '5px 0 0 0', color: '#666' }}>
                     {application.studentName} • 
                     GPA: {application.calculatedGPA?.toFixed(2) || 'N/A'} • 
-                    {application.isQualified ? ' ✅ Qualified' : ' ❌ Not Qualified'}
+                    {application.isQualified ? ' Qualified' : ' ❌ Not Qualified'}
                   </p>
                   <small style={{ color: '#999' }}>
                     Applied: {new Date(application.appliedAt).toLocaleDateString()}
@@ -391,7 +409,7 @@ const InstituteDashboard = () => {
           </div>
         ) : (
           <div style={{ textAlign: 'center', padding: '20px', color: '#666' }}>
-            <div style={{ fontSize: '48px', marginBottom: '10px' }}>📝</div>
+            <div style={{ fontSize: '48px', marginBottom: '10px' }}></div>
             <p>No applications yet</p>
             <p style={{ fontSize: '14px' }}>Applications will appear here when students apply to your courses</p>
           </div>
@@ -411,30 +429,9 @@ const InstituteDashboard = () => {
             cursor: 'pointer'
           }}
         >
-          🔄 Refresh Data
+          Refresh Data
         </button>
       </div>
-
-      {/* Debug Info */}
-      {process.env.NODE_ENV === 'development' && (
-        <div style={{
-          background: '#f3f4f6',
-          padding: '15px',
-          borderRadius: '6px',
-          fontSize: '14px',
-          marginTop: '30px',
-          fontFamily: 'monospace'
-        }}>
-          <strong>Debug Info:</strong>
-          <div>Email: {user?.email}</div>
-          <div>Role: {user?.role}</div>
-          <div>Status: {user?.status}</div>
-          <div>ID: {user?.id}</div>
-          <div>Courses: {stats?.totalCourses}</div>
-          <div>Applications: {stats?.totalApplications}</div>
-          <div>Recent Apps: {recentApplications?.length}</div>
-        </div>
-      )}
     </div>
   );
 };

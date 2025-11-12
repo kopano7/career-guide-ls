@@ -81,7 +81,7 @@ const SystemReports = () => {
         {/* Key Metrics */}
         <div className="stats-grid">
           <div className="stat-card">
-            <div className="stat-icon">📈</div>
+            
             <div className="stat-content">
               <div className="stat-number">{reports?.userGrowth || 0}</div>
               <div className="stat-label">New Users ({dateRange})</div>
@@ -89,7 +89,7 @@ const SystemReports = () => {
           </div>
 
           <div className="stat-card">
-            <div className="stat-icon">📚</div>
+            
             <div className="stat-content">
               <div className="stat-number">{reports?.courseApplications || 0}</div>
               <div className="stat-label">Course Applications</div>
@@ -97,7 +97,7 @@ const SystemReports = () => {
           </div>
 
           <div className="stat-card">
-            <div className="stat-icon">💼</div>
+            
             <div className="stat-content">
               <div className="stat-number">{reports?.jobApplications || 0}</div>
               <div className="stat-label">Job Applications</div>
@@ -105,7 +105,7 @@ const SystemReports = () => {
           </div>
 
           <div className="stat-card">
-            <div className="stat-icon">✅</div>
+            
             <div className="stat-content">
               <div className="stat-number">{reports?.approvalRate || 0}%</div>
               <div className="stat-label">Approval Rate</div>

@@ -23,10 +23,10 @@ const CourseManagement = () => {
     try {
       setLoading(true);
       setError(null);
-      console.log('📚 Fetching courses for institute:', user?.id);
+      console.log('Fetching courses for institute:', user?.id);
       
       const response = await instituteAPI.getCourses();
-      console.log('📥 Courses API response:', response);
+      console.log('Courses API response:', response);
       
       if (response.success) {
         setCourses(response.data.courses || []);
@@ -34,7 +34,7 @@ const CourseManagement = () => {
         throw new Error(response.message || 'Failed to load courses');
       }
     } catch (err) {
-      console.error('❌ Error fetching courses:', err);
+      console.error('Error fetching courses:', err);
       setError(err.response?.data?.message || err.message || 'Failed to load courses');
     } finally {
       setLoading(false);
@@ -44,10 +44,10 @@ const CourseManagement = () => {
   const handleCreateCourse = async (courseData) => {
     try {
       setError(null);
-      console.log('➕ Creating course:', courseData);
+      console.log('Creating course:', courseData);
       
       const response = await instituteAPI.addCourse(courseData);
-      console.log('📥 Create course response:', response);
+      console.log('Create course response:', response);
       
       if (response.success) {
         setSuccess('Course created successfully!');
@@ -60,7 +60,7 @@ const CourseManagement = () => {
         throw new Error(response.message || 'Failed to create course');
       }
     } catch (err) {
-      console.error('❌ Error creating course:', err);
+      console.error('Error creating course:', err);
       setError(err.response?.data?.message || err.message || 'Failed to create course');
     }
   };
@@ -68,10 +68,10 @@ const CourseManagement = () => {
   const handleUpdateCourse = async (courseId, courseData) => {
     try {
       setError(null);
-      console.log('✏️ Updating course:', courseId, courseData);
+      console.log('Updating course:', courseId, courseData);
       
       const response = await instituteAPI.updateCourse(courseId, courseData);
-      console.log('📥 Update course response:', response);
+      console.log('Update course response:', response);
       
       if (response.success) {
         setSuccess('Course updated successfully!');
@@ -83,7 +83,7 @@ const CourseManagement = () => {
         throw new Error(response.message || 'Failed to update course');
       }
     } catch (err) {
-      console.error('❌ Error updating course:', err);
+      console.error('Error updating course:', err);
       setError(err.response?.data?.message || err.message || 'Failed to update course');
     }
   };
@@ -95,10 +95,10 @@ const CourseManagement = () => {
 
     try {
       setError(null);
-      console.log('🗑️ Deleting course:', courseId);
+      console.log('Deleting course:', courseId);
       
       const response = await instituteAPI.deleteCourse(courseId);
-      console.log('📥 Delete course response:', response);
+      console.log('Delete course response:', response);
       
       if (response.success) {
         setSuccess('Course deleted successfully!');
@@ -109,7 +109,7 @@ const CourseManagement = () => {
         throw new Error(response.message || 'Failed to delete course');
       }
     } catch (err) {
-      console.error('❌ Error deleting course:', err);
+      console.error('Error deleting course:', err);
       setError(err.response?.data?.message || err.message || 'Failed to delete course');
     }
   };
@@ -130,7 +130,7 @@ const CourseManagement = () => {
         throw new Error(response.message || 'Failed to update course status');
       }
     } catch (err) {
-      console.error('❌ Error updating course status:', err);
+      console.error('Error updating course status:', err);
       setError(err.response?.data?.message || err.message || 'Failed to update course status');
     }
   };
@@ -160,7 +160,7 @@ const CourseManagement = () => {
         borderBottom: '1px solid #e0e0e0'
       }}>
         <div>
-          <h1 style={{ margin: 0, color: '#333', fontSize: '2rem' }}>📚 Course Management</h1>
+          <h1 style={{ margin: 0, color: '#333', fontSize: '2rem' }}>Course Management</h1>
           <p style={{ margin: '8px 0 0 0', color: '#666', fontSize: '1.1rem' }}>
             Manage your institution's courses and programs
           </p>
@@ -277,7 +277,7 @@ const CourseManagement = () => {
               borderRadius: '12px',
               boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
             }}>
-              <div style={{ fontSize: '64px', marginBottom: '20px' }}>📚</div>
+              <div style={{ fontSize: '64px', marginBottom: '20px' }}></div>
               <h3 style={{ margin: '0 0 10px 0', color: '#333' }}>No Courses Yet</h3>
               <p style={{ margin: '0 0 20px 0', color: '#666', maxWidth: '400px', marginLeft: 'auto', marginRight: 'auto' }}>
                 Start by creating your first course to attract students to your institution.
@@ -343,23 +343,7 @@ const CourseManagement = () => {
         </div>
       )}
 
-      {/* Debug Info */}
-      {process.env.NODE_ENV === 'development' && (
-        <div style={{
-          background: '#f3f4f6',
-          padding: '15px',
-          borderRadius: '8px',
-          fontSize: '14px',
-          marginTop: '30px',
-          fontFamily: 'monospace'
-        }}>
-          <strong>Debug Info:</strong>
-          <div>Institute ID: {user?.id}</div>
-          <div>Total Courses: {courses.length}</div>
-          <div>Active Courses: {courses.filter(c => c.status === 'active').length}</div>
-          <div>API Response: {JSON.stringify(courses.slice(0, 1))}</div>
-        </div>
-      )}
+
     </div>
   );
 };

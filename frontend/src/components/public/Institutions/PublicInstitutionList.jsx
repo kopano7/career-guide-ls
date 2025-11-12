@@ -1,14 +1,16 @@
 // src/components/public/Institutions/PublicInstitutionList.jsx
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import useApi from '../../../hooks/useApi';
 import useNotifications from '../../../hooks/useNotifications';
 import LoadingSpinner from '../../common/Loading/LoadingSpinner';
-import './PublicInstitutionList.css';
+import { useAuth } from '../../../contexts/AuthContext';
 
 const PublicInstitutionList = () => {
   const { get } = useApi();
   const { addNotification } = useNotifications();
+  const { user, isAuthenticated } = useAuth();
+  const navigate = useNavigate();
   
   const [institutions, setInstitutions] = useState([]);
   const [filteredInstitutions, setFilteredInstitutions] = useState([]);
@@ -31,22 +33,56 @@ const PublicInstitutionList = () => {
   const fetchInstitutions = async () => {
     try {
       setLoading(true);
+      // Use the correct endpoint from your publicRoutes.js
       const response = await get('/api/public/institutions');
       
-      if (response && response.data && response.data.success) {
-        const institutionsData = response.data.data.institutions || response.data.institutions || [];
+      console.log('🏫 API Response:', response);
+      
+      // Match the response structure from your backend publicRoutes.js
+      if (response && response.success) {
+        const institutionsData = response.data?.institutions || [];
         setInstitutions(institutionsData);
-        console.log('Fetched institutions:', institutionsData.length);
+        console.log('✅ Fetched institutions:', institutionsData.length);
       } else {
-        console.error('Unexpected response format:', response);
-        addNotification('Unexpected response format from server', 'error');
+        console.error('❌ Unexpected response format:', response);
+        addNotification('Failed to load institutions from server', 'error');
       }
     } catch (error) {
-      console.error('Error fetching institutions:', error);
+      console.error('❌ Error fetching institutions:', error);
       addNotification('Error loading institutions. Please try again.', 'error');
     } finally {
       setLoading(false);
     }
+  };
+
+  // Handle View Profile click
+  const handleViewProfile = (institutionId, institutionName, e) => {
+    if (!isAuthenticated) {
+      e.preventDefault();
+      addNotification('Please register or login to view institution profiles', 'info');
+      navigate('/register', { 
+        state: { 
+          redirectTo: `/institutions/${institutionId}`,
+          message: `Register to view detailed profile of ${institutionName}`
+        }
+      });
+    }
+    // If authenticated, let the Link work normally
+  };
+
+  // Handle View Courses click
+  const handleViewCourses = (institutionName, e) => {
+    if (!isAuthenticated) {
+      e.preventDefault();
+      addNotification('Please register or login to view institution courses', 'info');
+      navigate('/register', { 
+        state: { 
+          redirectTo: `/courses?institution=${encodeURIComponent(institutionName)}`,
+          message: `Register to view courses offered by ${institutionName}`
+        }
+      });
+    }
+    // If authenticated, let the Link work normally
   };
 
   const applyFilters = () => {
@@ -56,8 +92,7 @@ const PublicInstitutionList = () => {
     if (filters.type) {
       filtered = filtered.filter(inst => 
         inst.institutionType?.toLowerCase().includes(filters.type.toLowerCase()) ||
-        inst.type?.toLowerCase().includes(filters.type.toLowerCase()) ||
-        inst.role?.toLowerCase().includes(filters.type.toLowerCase())
+        inst.type?.toLowerCase().includes(filters.type.toLowerCase())
       );
     }
 
@@ -75,22 +110,22 @@ const PublicInstitutionList = () => {
     if (filters.search) {
       const searchLower = filters.search.toLowerCase();
       filtered = filtered.filter(inst => 
-        inst.name?.toLowerCase().includes(searchLower) ||
         inst.institutionName?.toLowerCase().includes(searchLower) ||
+        inst.name?.toLowerCase().includes(searchLower) ||
         inst.description?.toLowerCase().includes(searchLower) ||
         inst.email?.toLowerCase().includes(searchLower)
       );
     }
 
-    // Sorting
+    // Sorting with fallbacks
     filtered.sort((a, b) => {
       switch (filters.sortBy) {
         case 'name':
-          return (a.institutionName || a.name).localeCompare(b.institutionName || b.name);
+          return (a.institutionName || a.name || '').localeCompare(b.institutionName || b.name || '');
         case 'location':
-          return (a.city || a.address).localeCompare(b.city || b.address);
+          return (a.city || a.address || '').localeCompare(b.city || b.address || '');
         case 'date':
-          return new Date(b.createdAt) - new Date(a.createdAt);
+          return new Date(b.createdAt || 0) - new Date(a.createdAt || 0);
         case 'courses':
           return (b.courseCount || 0) - (a.courseCount || 0);
         default:
@@ -117,15 +152,17 @@ const PublicInstitutionList = () => {
     });
   };
 
-  // Get unique values for filters
+  // Get unique values for filters from actual institution data
   const institutionTypes = [...new Set(institutions
     .map(inst => inst.institutionType || inst.type)
     .filter(Boolean)
   )].sort();
 
   const locations = [...new Set(institutions
-    .map(inst => inst.city || inst.location)
-    .filter(Boolean)
+    .flatMap(inst => [
+      inst.city,
+      inst.location
+    ].filter(Boolean))
   )].sort();
 
   const getInstitutionName = (institution) => {
@@ -145,20 +182,56 @@ const PublicInstitutionList = () => {
 
   const formatDate = (dateString) => {
     if (!dateString) return 'Not specified';
-    return new Date(dateString).toLocaleDateString('en-LS', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
+    try {
+      const date = dateString?.toDate ? dateString.toDate() : new Date(dateString);
+      return date.toLocaleDateString('en-LS', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+    } catch (error) {
+      return 'Invalid date';
+    }
   };
 
-  if (loading) return <LoadingSpinner />;
+  // Show authentication prompt for public users
+  const AuthPrompt = () => (
+    <div className="auth-prompt">
+      <div className="auth-prompt-content">
+        <h4>🏫 Create an Account</h4>
+        <p>Register to view detailed institution profiles and explore their course offerings</p>
+        <div className="auth-prompt-actions">
+          <Link to="/register" className="btn-primary">
+            Register Now
+          </Link>
+          <Link to="/login" className="btn-outline">
+            Login
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+
+  if (loading) {
+    return (
+      <div className="loading-container">
+        <LoadingSpinner />
+        <p>Loading approved institutions from Lesotho...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="public-institution-list">
       <div className="page-header">
         <h1>Educational Institutions</h1>
-        <p>Discover {institutions.length} approved educational institutions and their programs in Lesotho</p>
+        <p>
+          Discover {institutions.length} approved educational institutions and their programs in Lesotho
+          {institutions.length > 0 && ` • ${filteredInstitutions.length} match your filters`}
+        </p>
+        
+        {/* Show auth prompt for non-authenticated users */}
+        {!isAuthenticated && <AuthPrompt />}
       </div>
 
       {/* Filters Section */}
@@ -263,6 +336,11 @@ const PublicInstitutionList = () => {
             Partner Institutions 
             <span className="results-count">({filteredInstitutions.length} of {institutions.length})</span>
           </h2>
+          {!isAuthenticated && (
+            <div className="auth-reminder">
+              <span>🔐 Register to view detailed profiles and courses</span>
+            </div>
+          )}
         </div>
 
         {filteredInstitutions.length > 0 ? (
@@ -321,15 +399,32 @@ const PublicInstitutionList = () => {
                   <Link 
                     to={`/institutions/${institution.id}`}
                     className="btn-outline"
+                    onClick={(e) => handleViewProfile(
+                      institution.id, 
+                      getInstitutionName(institution), 
+                      e
+                    )}
                   >
-                    View Profile
+                    {isAuthenticated ? 'View Profile' : 'View Profile 🔒'}
                   </Link>
                   <Link 
-                    to={`/courses?institution=${getInstitutionName(institution)}`}
+                    to={`/courses?institution=${encodeURIComponent(getInstitutionName(institution))}`}
                     className="btn-primary"
+                    onClick={(e) => handleViewCourses(
+                      getInstitutionName(institution), 
+                      e
+                    )}
                   >
-                    View Courses
+                    {isAuthenticated ? 'View Courses' : 'View Courses 🔒'}
                   </Link>
+                </div>
+
+                {/* Institution metadata */}
+                <div className="institution-meta-footer">
+                  <small>
+                    Status: {institution.status || 'approved'} • 
+                    Last updated: {formatDate(institution.updatedAt)}
+                  </small>
                 </div>
               </div>
             ))}
@@ -338,13 +433,20 @@ const PublicInstitutionList = () => {
           <div className="empty-state">
             <div className="empty-icon">🏫</div>
             <h3>No institutions found</h3>
-            <p>Try adjusting your filters or search terms to find what you're looking for.</p>
-            <button 
-              className="btn-secondary"
-              onClick={clearFilters}
-            >
-              Clear All Filters
-            </button>
+            <p>
+              {institutions.length === 0 
+                ? 'No approved institutions are currently available.' 
+                : 'Try adjusting your filters or search terms to find what you\'re looking for.'
+              }
+            </p>
+            {institutions.length > 0 && (
+              <button 
+                className="btn-secondary"
+                onClick={clearFilters}
+              >
+                Clear All Filters
+              </button>
+            )}
           </div>
         )}
       </div>

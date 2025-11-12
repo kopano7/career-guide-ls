@@ -12,7 +12,7 @@ const InstituteApproval = () => {
   const [loading, setLoading] = useState(true);
   const [processing, setProcessing] = useState({});
   const [backendStatus, setBackendStatus] = useState('checking');
-  const [apiBaseUrl] = useState('http://localhost:5000');
+  const [apiBaseUrl] = useState('https://career-guide-ls.onrender.com');
 
   // Redirect if not authenticated or not admin
   useEffect(() => {
@@ -207,7 +207,7 @@ const InstituteApproval = () => {
 
   const viewInstituteDetails = (institute) => {
     const details = `
-🏫 Institute Details:
+Institute Details:
 
 Name: ${institute.name}
 Email: ${institute.email}
@@ -240,7 +240,7 @@ Registered: ${institute.createdAt ? new Date(institute.createdAt).toLocaleDateSt
       <div className="page-header">
         <div className="header-content">
           <h1 className="page-title">
-            🏫 Institute Approvals
+             Institute Approvals
             <span className={`status-badge ${backendStatus}`}>
               {backendStatus === 'connected' ? 'LIVE' : 'DEMO'}
             </span>
@@ -258,13 +258,13 @@ Registered: ${institute.createdAt ? new Date(institute.createdAt).toLocaleDateSt
           </div>
           <div className="header-actions">
             <button className="btn-refresh" onClick={fetchPendingInstitutes}>
-              🔄 Refresh
+               Refresh
             </button>
             <button 
               className="btn-test" 
               onClick={testBackendConnection}
             >
-              🔌 Test Connection
+               Test Connection
             </button>
           </div>
         </div>
@@ -274,7 +274,7 @@ Registered: ${institute.createdAt ? new Date(institute.createdAt).toLocaleDateSt
       {backendStatus !== 'connected' && (
         <div className="connection-banner warning">
           <div className="banner-content">
-            <span className="banner-icon">⚠️</span>
+            
             <div className="banner-text">
               <strong>Backend Connection Issue</strong>
               <p>Displaying demo data. Real institute data will appear when backend is connected.</p>
@@ -308,8 +308,8 @@ Registered: ${institute.createdAt ? new Date(institute.createdAt).toLocaleDateSt
                       </div>
                       <div className="institute-main">
                         <h4 className="institute-name">{institute.name}</h4>
-                        <p className="institute-email">📧 {institute.email}</p>
-                        <p className="institute-phone">📞 {institute.phoneNumber || 'No phone provided'}</p>
+                        <p className="institute-email"> {institute.email}</p>
+                        <p className="institute-phone"> {institute.phoneNumber || 'No phone provided'}</p>
                       </div>
                       <div className="institute-meta">
                         <span className="type-badge">{institute.institutionType || 'Unknown Type'}</span>
@@ -322,12 +322,12 @@ Registered: ${institute.createdAt ? new Date(institute.createdAt).toLocaleDateSt
                     <div className="institute-details">
                       <div className="detail-section">
                         <div className="detail-item">
-                          <strong>📍 Address:</strong>
+                          <strong>Address:</strong>
                           <span>{institute.address || 'Not provided'}</span>
                         </div>
                         {institute.description && (
                           <div className="detail-item">
-                            <strong>📝 Description:</strong>
+                            <strong>Description:</strong>
                             <span className="description-text">{institute.description}</span>
                           </div>
                         )}
@@ -340,7 +340,7 @@ Registered: ${institute.createdAt ? new Date(institute.createdAt).toLocaleDateSt
                           className="btn-view"
                           onClick={() => viewInstituteDetails(institute)}
                         >
-                          👁️ View Details
+                           View Details
                         </button>
                         <button 
                           className="btn-success"
@@ -363,7 +363,7 @@ Registered: ${institute.createdAt ? new Date(institute.createdAt).toLocaleDateSt
               </div>
             ) : (
               <div className="empty-state">
-                <div className="empty-icon">🎉</div>
+                
                 <h4>No Pending Institutes</h4>
                 <p>All registration requests have been processed.</p>
                 {backendStatus === 'connected' ? (

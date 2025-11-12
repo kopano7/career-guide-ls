@@ -1,14 +1,16 @@
 // src/components/public/Courses/PublicCourseCatalog.jsx
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import useApi from '../../../hooks/useApi';
 import useNotifications from '../../../hooks/useNotifications';
 import LoadingSpinner from '../../common/Loading/LoadingSpinner';
-import './PublicCourseCatalog.css';
+import { useAuth } from '../../../contexts/AuthContext'; // Import auth context
 
 const PublicCourseCatalog = () => {
   const { get } = useApi();
   const { addNotification } = useNotifications();
+  const { user, isAuthenticated } = useAuth(); // Get auth state
+  const navigate = useNavigate(); // For programmatic navigation
   
   const [courses, setCourses] = useState([]);
   const [filteredCourses, setFilteredCourses] = useState([]);
@@ -34,20 +36,57 @@ const PublicCourseCatalog = () => {
       setLoading(true);
       const response = await get('/api/public/courses');
       
-      if (response && response.data && response.data.success) {
-        const coursesData = response.data.data.courses || response.data.courses || [];
+      console.log('API Response:', response);
+      
+      if (response && response.success) {
+        const coursesData = response.data.courses || [];
         setCourses(coursesData);
-        console.log('Fetched courses:', coursesData.length);
+        console.log('✅ Fetched courses:', coursesData.length);
       } else {
-        console.error('Unexpected response format:', response);
-        addNotification('Unexpected response format from server', 'error');
+        console.error('❌ Unexpected response format:', response);
+        addNotification('Failed to load courses from server', 'error');
       }
     } catch (error) {
-      console.error('Error fetching courses:', error);
+      console.error('❌ Error fetching courses:', error);
       addNotification('Error loading courses. Please try again.', 'error');
     } finally {
       setLoading(false);
     }
+  };
+
+  // Handle View Details click
+  const handleViewDetails = (courseId, e) => {
+    if (!isAuthenticated) {
+      e.preventDefault(); // Prevent default Link behavior
+      addNotification('Please register or login to view course details', 'info');
+      navigate('/register', { 
+        state: { 
+          redirectTo: `/courses/${courseId}`,
+          message: 'Register to view course details and apply'
+        }
+      });
+    }
+    // If authenticated, let the Link work normally
+  };
+
+  // Handle Apply Now click
+  const handleApplyNow = (courseId, courseTitle, e) => {
+    if (!isAuthenticated) {
+      e.preventDefault(); // Prevent default Link behavior
+      addNotification('Please register as a student to apply for this course', 'info');
+      navigate('/register', { 
+        state: { 
+          redirectTo: `/apply/course/${courseId}`,
+          message: `Register as a student to apply for: ${courseTitle}`,
+          preferredRole: 'student' // Suggest student role
+        }
+      });
+    } else if (user?.role !== 'student') {
+      e.preventDefault(); // Prevent default Link behavior
+      addNotification('Only students can apply for courses. Please login with a student account.', 'warning');
+      // Optionally redirect to login or show role switch option
+    }
+    // If authenticated as student, let the Link work normally
   };
 
   const applyFilters = () => {
@@ -64,15 +103,16 @@ const PublicCourseCatalog = () => {
     // Field filter
     if (filters.field) {
       filtered = filtered.filter(course => 
-        course.field?.toLowerCase().includes(filters.field.toLowerCase()) ||
         course.category?.toLowerCase().includes(filters.field.toLowerCase()) ||
-        course.tags?.some(tag => tag.toLowerCase().includes(filters.field.toLowerCase()))
+        course.fieldOfStudy?.toLowerCase().includes(filters.field.toLowerCase()) ||
+        course.department?.toLowerCase().includes(filters.field.toLowerCase())
       );
     }
 
     // Level filter
     if (filters.level) {
       filtered = filtered.filter(course => 
+        course.qualificationLevel?.toLowerCase() === filters.level.toLowerCase() ||
         course.level?.toLowerCase() === filters.level.toLowerCase()
       );
     }
@@ -86,21 +126,22 @@ const PublicCourseCatalog = () => {
         course.description?.toLowerCase().includes(searchLower) ||
         course.institutionName?.toLowerCase().includes(searchLower) ||
         course.instituteName?.toLowerCase().includes(searchLower) ||
-        course.field?.toLowerCase().includes(searchLower)
+        course.category?.toLowerCase().includes(searchLower) ||
+        course.fieldOfStudy?.toLowerCase().includes(searchLower)
       );
     }
 
-    // Sorting
+    // Sorting with fallbacks
     filtered.sort((a, b) => {
       switch (filters.sortBy) {
         case 'name':
-          return (a.title || a.name).localeCompare(b.title || b.name);
+          return (a.title || a.name || '').localeCompare(b.title || b.name || '');
         case 'institution':
-          return (a.institutionName || a.instituteName).localeCompare(b.institutionName || b.instituteName);
+          return (a.institutionName || a.instituteName || '').localeCompare(b.institutionName || b.instituteName || '');
         case 'date':
-          return new Date(b.createdAt) - new Date(a.createdAt);
+          return new Date(b.createdAt || 0) - new Date(a.createdAt || 0);
         case 'fee':
-          return (a.tuitionFee || 0) - (b.tuitionFee || 0);
+          return (a.tuitionFee || a.fee || 0) - (b.tuitionFee || b.fee || 0);
         default:
           return 0;
       }
@@ -126,24 +167,28 @@ const PublicCourseCatalog = () => {
     });
   };
 
-  // Get unique values for filters
+  // Get unique values for filters from actual course data
   const institutions = [...new Set(courses
     .map(course => course.institutionName || course.instituteName)
     .filter(Boolean)
   )].sort();
 
   const fields = [...new Set(courses
-    .map(course => course.field || course.category)
-    .filter(Boolean)
+    .flatMap(course => [
+      course.category,
+      course.fieldOfStudy,
+      course.department,
+      course.field
+    ].filter(Boolean))
   )].sort();
 
   const levels = [...new Set(courses
-    .map(course => course.level)
+    .map(course => course.qualificationLevel || course.level)
     .filter(Boolean)
   )].sort();
 
   const formatCurrency = (amount) => {
-    if (!amount) return 'Free';
+    if (!amount || amount === 0) return 'Free';
     return new Intl.NumberFormat('en-LS', {
       style: 'currency',
       currency: 'LSL'
@@ -152,20 +197,72 @@ const PublicCourseCatalog = () => {
 
   const formatDate = (dateString) => {
     if (!dateString) return 'Not specified';
-    return new Date(dateString).toLocaleDateString('en-LS', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
+    try {
+      const date = dateString?.toDate ? dateString.toDate() : new Date(dateString);
+      return date.toLocaleDateString('en-LS', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+    } catch (error) {
+      return 'Invalid date';
+    }
   };
 
-  if (loading) return <LoadingSpinner />;
+  // Get course status with proper styling
+  const getStatusBadge = (status) => {
+    const statusMap = {
+      'active': { text: 'ACTIVE', class: 'status-active' },
+      'inactive': { text: 'INACTIVE', class: 'status-inactive' },
+      'pending': { text: 'PENDING', class: 'status-pending' }
+    };
+    
+    const statusInfo = statusMap[status] || { text: status?.toUpperCase() || 'UNKNOWN', class: 'status-unknown' };
+    return (
+      <div className={`course-badge ${statusInfo.class}`}>
+        {statusInfo.text}
+      </div>
+    );
+  };
+
+  // Show authentication prompt for public users
+  const AuthPrompt = () => (
+    <div className="auth-prompt">
+      <div className="auth-prompt-content">
+        <h4>🔐 Create an Account</h4>
+        <p>Register as a student to view course details and apply for courses</p>
+        <div className="auth-prompt-actions">
+          <Link to="/register" className="btn-primary">
+            Register Now
+          </Link>
+          <Link to="/login" className="btn-outline">
+            Login
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+
+  if (loading) {
+    return (
+      <div className="loading-container">
+        <LoadingSpinner />
+        <p>Loading courses from approved institutions...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="public-course-catalog">
       <div className="catalog-header">
         <h1>Course Catalog</h1>
-        <p>Discover {courses.length} courses from approved educational institutions in Lesotho</p>
+        <p>
+          Discover {courses.length} active courses from approved educational institutions in Lesotho
+          {courses.length > 0 && ` • ${filteredCourses.length} match your filters`}
+        </p>
+        
+        {/* Show auth prompt for non-authenticated users */}
+        {!isAuthenticated && <AuthPrompt />}
       </div>
 
       {/* Filters Section */}
@@ -203,7 +300,9 @@ const PublicCourseCatalog = () => {
             >
               <option value="">All Institutions</option>
               {institutions.map(institution => (
-                <option key={institution} value={institution}>{institution}</option>
+                <option key={institution} value={institution}>
+                  {institution}
+                </option>
               ))}
             </select>
           </div>
@@ -217,7 +316,9 @@ const PublicCourseCatalog = () => {
             >
               <option value="">All Fields</option>
               {fields.map(field => (
-                <option key={field} value={field}>{field}</option>
+                <option key={field} value={field}>
+                  {field}
+                </option>
               ))}
             </select>
           </div>
@@ -231,7 +332,9 @@ const PublicCourseCatalog = () => {
             >
               <option value="">All Levels</option>
               {levels.map(level => (
-                <option key={level} value={level}>{level}</option>
+                <option key={level} value={level}>
+                  {level}
+                </option>
               ))}
             </select>
           </div>
@@ -290,6 +393,11 @@ const PublicCourseCatalog = () => {
             Available Courses 
             <span className="results-count">({filteredCourses.length} of {courses.length})</span>
           </h2>
+          {!isAuthenticated && (
+            <div className="auth-reminder">
+              <span>🔐 Register to apply for courses</span>
+            </div>
+          )}
         </div>
 
         {filteredCourses.length > 0 ? (
@@ -297,36 +405,46 @@ const PublicCourseCatalog = () => {
             {filteredCourses.map(course => (
               <div key={course.id} className="course-card">
                 <div className="course-header">
-                  <div className="course-badge">
-                    {course.status === 'active' ? 'ACTIVE' : course.status?.toUpperCase()}
-                  </div>
-                  <h3 className="course-title">{course.title || course.name}</h3>
+                  {getStatusBadge(course.status)}
+                  <h3 className="course-title">
+                    {course.title || course.name || 'Untitled Course'}
+                  </h3>
                   <div className="course-institution">
-                    {course.institutionName || course.instituteName}
+                    📍 {course.institutionName || course.instituteName || 'Unknown Institution'}
                   </div>
                 </div>
 
                 <div className="course-details">
                   <div className="detail-item">
                     <span className="label">📚 Field:</span>
-                    <span className="value">{course.field || 'Not specified'}</span>
+                    <span className="value">
+                      {course.category || course.fieldOfStudy || 'Not specified'}
+                    </span>
                   </div>
                   <div className="detail-item">
                     <span className="label">🎯 Level:</span>
-                    <span className="value">{course.level || 'All Levels'}</span>
+                    <span className="value">
+                      {course.qualificationLevel || course.level || 'Not specified'}
+                    </span>
                   </div>
                   <div className="detail-item">
                     <span className="label">⏱️ Duration:</span>
-                    <span className="value">{course.duration || 'Not specified'}</span>
+                    <span className="value">
+                      {course.duration || course.durationMonths || 'Not specified'}
+                    </span>
                   </div>
                   <div className="detail-item">
                     <span className="label">💰 Fee:</span>
-                    <span className="value">{formatCurrency(course.tuitionFee)}</span>
+                    <span className="value">
+                      {formatCurrency(course.tuitionFee || course.fee)}
+                    </span>
                   </div>
                   {course.applicationDeadline && (
                     <div className="detail-item deadline">
                       <span className="label">📅 Deadline:</span>
-                      <span className="value">{formatDate(course.applicationDeadline)}</span>
+                      <span className="value">
+                        {formatDate(course.applicationDeadline)}
+                      </span>
                     </div>
                   )}
                 </div>
@@ -343,15 +461,36 @@ const PublicCourseCatalog = () => {
                   <Link 
                     to={`/courses/${course.id}`}
                     className="btn-outline"
+                    onClick={(e) => handleViewDetails(course.id, e)}
                   >
-                    View Details
+                    {isAuthenticated ? 'View Details' : 'View Details 🔒'}
                   </Link>
                   <Link 
                     to={`/apply/course/${course.id}`}
                     className="btn-primary"
+                    onClick={(e) => handleApplyNow(
+                      course.id, 
+                      course.title || course.name, 
+                      e
+                    )}
                   >
-                    Apply Now
+                    {isAuthenticated ? 'Apply Now' : 'Apply Now 🔒'}
                   </Link>
+                </div>
+
+                {/* Show message for non-students */}
+                {isAuthenticated && user?.role !== 'student' && (
+                  <div className="role-warning">
+                    <small>⚠️ Only student accounts can apply for courses</small>
+                  </div>
+                )}
+
+                {/* Course metadata */}
+                <div className="course-meta">
+                  <small>
+                    Added: {formatDate(course.createdAt)}
+                    {course.updatedAt && ` • Updated: ${formatDate(course.updatedAt)}`}
+                  </small>
                 </div>
               </div>
             ))}
@@ -360,13 +499,20 @@ const PublicCourseCatalog = () => {
           <div className="empty-state">
             <div className="empty-icon">🔍</div>
             <h3>No courses found</h3>
-            <p>Try adjusting your filters or search terms to find what you're looking for.</p>
-            <button 
-              className="btn-secondary"
-              onClick={clearFilters}
-            >
-              Clear All Filters
-            </button>
+            <p>
+              {courses.length === 0 
+                ? 'No courses are currently available from approved institutions.' 
+                : 'Try adjusting your filters or search terms to find what you\'re looking for.'
+              }
+            </p>
+            {courses.length > 0 && (
+              <button 
+                className="btn-secondary"
+                onClick={clearFilters}
+              >
+                Clear All Filters
+              </button>
+            )}
           </div>
         )}
       </div>

@@ -2,8 +2,8 @@
 import { useState, useCallback } from 'react';
 import { useNotification } from '../contexts/NotificationContext';
 
-// API base URL - UPDATED to port 5000
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
+// FIX: Remove /api from base URL since your routes are already mounted at /api
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://career-guide-ls.onrender.com';
 
 const useApi = () => {
   const [loading, setLoading] = useState(false);
@@ -16,13 +16,21 @@ const useApi = () => {
 
   const request = useCallback(async (endpoint, options = {}) => {
     const token = getToken();
-    const url = `${API_BASE_URL}${endpoint}`;
+    
+    // FIX: Ensure endpoint starts with /api
+    let cleanEndpoint = endpoint;
+    if (!endpoint.startsWith('/api/')) {
+      cleanEndpoint = `/api${endpoint.startsWith('/') ? endpoint : `/${endpoint}`}`;
+    }
+    
+    const url = `${API_BASE_URL}${cleanEndpoint}`;
 
-    // ADDED: Debug logging
+    // Debug logging
     console.log('🔐 API Request Debug:');
-    console.log('   URL:', url);
+    console.log('   Final URL:', url);
+    console.log('   Endpoint:', endpoint);
+    console.log('   Clean Endpoint:', cleanEndpoint);
     console.log('   Token exists:', !!token);
-    console.log('   Token preview:', token ? `${token.substring(0, 20)}...` : 'No token');
 
     const config = {
       headers: {
@@ -38,24 +46,28 @@ const useApi = () => {
     }
 
     try {
+      setLoading(true);
       const response = await fetch(url, config);
+      
+      console.log('📨 API Response Status:', response.status);
+      
       const data = await response.json();
-
-      // ADDED: Debug response
-      console.log('📨 API Response:', data);
+      console.log('📨 API Response Data:', data);
 
       if (!response.ok) {
-        throw new Error(data.message || data.error || 'Request failed');
+        throw new Error(data.message || data.error || `HTTP error! status: ${response.status}`);
       }
 
-      // FIXED: Return the entire response data structure
       return data;
     } catch (error) {
-      console.error('API request failed:', error);
+      console.error('❌ API request failed:', error);
       throw error;
+    } finally {
+      setLoading(false);
     }
   }, []);
 
+  // ... rest of your useApi code remains the same
   const callApi = useCallback(async (apiCall, successMessage = null) => {
     setLoading(true);
     setError(null);
@@ -69,7 +81,7 @@ const useApi = () => {
       
       return { success: true, data: result };
     } catch (err) {
-      const errorMessage = err.response?.data?.error || err.message || 'Something went wrong';
+      const errorMessage = err.message || 'Something went wrong';
       setError(errorMessage);
       showError('Error', errorMessage);
       
@@ -79,29 +91,20 @@ const useApi = () => {
     }
   }, [showError]);
 
-  // Convenience methods - UPDATED to handle response structure
   const get = useCallback(async (endpoint) => {
-    const response = await request(endpoint);
-    // FIXED: Your backend returns { success: true, data: { ... } }
-    return response;
+    return await request(endpoint);
   }, [request]);
 
   const post = useCallback(async (endpoint, body) => {
-    const response = await request(endpoint, { method: 'POST', body });
-    // FIXED: Your backend returns { success: true, data: { ... } }
-    return response;
+    return await request(endpoint, { method: 'POST', body });
   }, [request]);
 
   const put = useCallback(async (endpoint, body) => {
-    const response = await request(endpoint, { method: 'PUT', body });
-    // FIXED: Your backend returns { success: true, data: { ... } }
-    return response;
+    return await request(endpoint, { method: 'PUT', body });
   }, [request]);
 
   const del = useCallback(async (endpoint) => {
-    const response = await request(endpoint, { method: 'DELETE' });
-    // FIXED: Your backend returns { success: true, data: { ... } }
-    return response;
+    return await request(endpoint, { method: 'DELETE' });
   }, [request]);
 
   const clearError = useCallback(() => {
@@ -113,7 +116,6 @@ const useApi = () => {
     error,
     callApi,
     clearError,
-    // Direct API methods
     get,
     post,
     put,

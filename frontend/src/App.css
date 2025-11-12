@@ -1,280 +1,666 @@
-/* === APP STYLES WITH LIGHT/DARK MODE === */
+/* src/App.css */
+
+/* Theme variables for light/dark */
+:root {
+  --primary-color: #007bff;
+  --secondary-color: #6c757d;
+  --success-color: #28a745;
+  --danger-color: #dc3545;
+  --light-bg: #f8f9fa;
+  --dark-bg: #121212;
+  --light-text: #333;
+  --dark-text: #f1f1f1;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.6;
+  margin: 0;
+  padding: 0;
+  background-color: var(--light-bg);
+  color: var(--light-text);
+  transition: background-color 0.3s, color 0.3s;
+}
+
+body.dark {
+  background-color: var(--dark-bg);
+  color: var(--dark-text);
+}
+
 .app {
   min-height: 100vh;
-  background-color: white;
-  color: #424242;
+}
+
+/* Buttons */
+button, .btn {
+  cursor: pointer;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-weight: 500;
+  transition: all 0.3s;
+}
+
+.btn-primary {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.btn-outline {
+  background: transparent;
+  border: 1px solid var(--primary-color);
+  color: var(--primary-color);
+}
+
+.btn-outline:hover {
+  background: var(--primary-color);
+  color: white;
+}
+
+/* Containers */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Hero Section */
+.hero-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.hero-title .highlight {
+  color: var(--primary-color);
+}
+
+/* Feature/Stats Section */
+.features-grid, .stats-grid, .categories-grid, .courses-grid, .institutions-grid, .jobs-grid {
+  display: grid;
+  gap: 20px;
+  margin-top: 30px;
+}
+
+/* Example for 4-column grid */
+.features-grid, .stats-grid, .categories-grid, .courses-grid {
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+/* Cards */
+.feature-card, .course-card, .institution-card, .job-card {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  transition: transform 0.2s;
+}
+
+body.dark .feature-card,
+body.dark .course-card,
+body.dark .institution-card,
+body.dark .job-card {
+  background: #1e1e1e;
+  color: var(--dark-text);
+}
+
+.feature-card:hover,
+.course-card:hover,
+.institution-card:hover,
+.job-card:hover {
+  transform: translateY(-5px);
+}
+
+/* Headings */
+h1, h2, h3 {
+  margin: 0;
+}
+
+/* Links */
+a {
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Typewriter / search */
+.search-input {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px 0 0 5px;
+  width: 250px;
+}
+
+.search-btn {
+  padding: 10px 15px;
+  border-radius: 0 5px 5px 0;
+  border: none;
+  background: var(--primary-color);
+  color: white;
+}
+
+/* Dark theme for inputs */
+body.dark .search-input {
+  background: #2b2b2b;
+  color: var(--dark-text);
+  border: 1px solid #555;
+}
+
+body.dark .search-btn {
+  background: var(--primary-color);
+}
+
+/* ===========================
+   Theme Variables
+=========================== */
+:root {
+  --primary-color: #007bff;
+  --secondary-color: #6c757d;
+  --success-color: #28a745;
+  --danger-color: #dc3545;
+  --warning-color: #ffc107;
+  --info-color: #17a2b8;
+  --light-color: #f8f9fa;
+  --dark-color: #343a40;
+
+  /* Typography */
+  --text-color: #333;
+  --bg-color: #f8f9fa;
+  --card-bg: #fff;
+  --input-bg: #fff;
+  --input-border: #ddd;
+  --highlight-color: #007bff;
+}
+
+/* Dark mode overrides */
+body.dark {
+  --text-color: #e0e0e0;
+  --bg-color: #1a1a1a;
+  --card-bg: #2c2c2c;
+  --input-bg: #333;
+  --input-border: #555;
+  --highlight-color: #4dabf7;
+}
+
+/* ===========================
+   Global Styles
+=========================== */
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.6;
+  color: var(--text-color);
+  background-color: var(--bg-color);
   transition: all 0.3s ease;
-  position: relative;
 }
 
-/* Dark Mode */
-.app.dark-mode {
-  background-color: #1a237e;
-  color: #ffffff;
+a {
+  text-decoration: none;
+  color: inherit;
 }
 
-/* Theme Toggle Button */
-.theme-toggle {
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* ===========================
+   Buttons
+=========================== */
+.btn, .primary-btn, .secondary-btn, .explore-btn-large, .cta-btn {
+  display: inline-block;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+  border: none;
+}
+
+.btn-primary, .primary-btn, .cta-btn.primary {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.btn-primary:hover, .primary-btn:hover, .cta-btn.primary:hover {
+  background-color: #0056b3;
+}
+
+.btn-secondary, .secondary-btn, .cta-btn.secondary {
+  background-color: var(--secondary-color);
+  color: white;
+}
+
+.btn-outline {
+  background: transparent;
+  border: 1px solid var(--primary-color);
+  color: var(--primary-color);
+}
+
+.btn-outline:hover {
+  background: var(--primary-color);
+  color: white;
+}
+
+/* ===========================
+   Cards & Sections
+=========================== */
+.card, .feature-card, .course-card, .featured-course-card, .institution-card, .job-card {
+  background: var(--card-bg);
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  padding: 20px;
+  margin-bottom: 20px;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+.hero-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.hero-title {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+}
+
+.highlight {
+  color: var(--highlight-color);
+}
+
+.hero-description {
+  font-size: 1.2rem;
+  margin-bottom: 30px;
+}
+
+/* ===========================
+   Forms & Inputs
+=========================== */
+input, .form-control {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid var(--input-border);
+  border-radius: 5px;
+  font-size: 14px;
+  background-color: var(--input-bg);
+  color: var(--text-color);
+  transition: all 0.3s ease;
+}
+
+input:focus, .form-control:focus {
+  outline: none;
+  border-color: var(--primary-color);
+}
+
+/* ===========================
+   Sections Grids
+=========================== */
+.features-grid, .courses-grid, .institutions-grid, .jobs-grid, .categories-grid, .category-courses-grid {
+  display: grid;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.features-grid { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+.courses-grid { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
+.institutions-grid { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+.jobs-grid { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
+.categories-grid { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+.category-courses-grid { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
+
+/* ===========================
+   Stats
+=========================== */
+.stats-container, .stats-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.stat-item {
+  background: var(--card-bg);
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  flex: 1 1 150px;
+}
+
+/* ===========================
+   CTA Section
+=========================== */
+.cta-section {
+  background: var(--primary-color);
+  color: white;
+  padding: 40px 20px;
+  text-align: center;
+  border-radius: 8px;
+  margin: 40px 0;
+}
+
+.cta-buttons .cta-btn {
+  margin: 10px;
+}
+
+/* ===========================
+   Misc
+=========================== */
+.no-data, .loading {
+  text-align: center;
+  padding: 20px;
+  color: var(--text-color);
+}
+
+.theme-toggle-btn {
   position: fixed;
   top: 20px;
   right: 20px;
-  z-index: 1000;
-  background: #1b5e20;
-  border: 1px solid #1b5e20;
-  border-radius: 50%;
-  width: 50px;
-  height: 50px;
+  z-index: 999;
+}
+
+/* ==========================
+   GLOBAL STYLING
+========================== */
+
+/* Root variables for colors */
+:root {
+  --color-bg: #000; /* black background */
+  --color-text: #fff; /* white text */
+  --color-grey: #aaa; /* grey accents */
+  --color-accent: #228B22; /* forest green */
+  --color-card-bg: #111; /* card background */
+  --color-border: #228B22; /* borders */
+  --color-hover: #228B22; /* hover */
+}
+
+/* Light mode overrides */
+body.light-mode {
+  --color-bg: #fff;
+  --color-text: #000;
+  --color-grey: #555;
+  --color-card-bg: #f9f9f9;
+}
+
+/* Global body */
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
+  transition: all 0.3s ease;
+}
+
+/* Links */
+a {
+  color: var(--color-accent);
+  text-decoration: underline;
+  transition: color 0.2s ease;
+}
+a:hover {
+  color: var(--color-hover);
+}
+
+/* Buttons */
+button, .btn-primary, .btn-secondary, .btn-outline {
+  font-family: inherit;
+  cursor: pointer;
+  border-radius: 8px;
+  border: 2px solid var(--color-accent);
+  padding: 0.5rem 1rem;
+  margin: 0.25rem;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+}
+
+button:hover, .btn-primary:hover, .btn-secondary:hover, .btn-outline:hover {
+  border-color: var(--color-hover);
+  color: var(--color-hover);
+}
+
+.btn-primary {
+  background-color: var(--color-accent);
+  color: var(--color-text);
+  border: 2px solid var(--color-accent);
+}
+
+.btn-primary:hover {
+  background-color: transparent;
+  color: var(--color-accent);
+}
+
+.btn-secondary {
+  background-color: transparent;
+  color: var(--color-text);
+  border: 2px solid var(--color-accent);
+}
+
+.btn-secondary:hover {
+  background-color: var(--color-accent);
+  color: var(--color-text);
+}
+
+.btn-outline {
+  background-color: transparent;
+  color: var(--color-accent);
+  border: 2px solid var(--color-accent);
+}
+
+.btn-outline:hover {
+  background-color: var(--color-accent);
+  color: var(--color-text);
+}
+
+/* Page headers */
+.page-header, .catalog-header, .section-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.page-header h1, .catalog-header h1, .section-header h2 {
+  margin-bottom: 0.5rem;
+  color: var(--color-text);
+}
+
+.page-header p, .catalog-header p {
+  color: var(--color-grey);
+}
+
+/* Filters */
+.filters-section {
+  margin-bottom: 2rem;
+}
+
+.filter-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.filter-group label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 0.25rem;
+}
+
+.filter-group input, .filter-group select {
+  width: 100%;
+  padding: 0.5rem;
+  border: 2px solid var(--color-border);
+  border-radius: 6px;
+  background-color: var(--color-card-bg);
+  color: var(--color-text);
+  transition: border 0.2s ease;
+}
+
+.filter-group input:focus, .filter-group select:focus {
+  border-color: var(--color-hover);
+  outline: none;
+}
+
+.active-filters {
+  margin-top: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  color: var(--color-grey);
+}
+
+.filter-tag {
+  background-color: var(--color-card-bg);
+  padding: 0.25rem 0.5rem;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
   display: flex;
   align-items: center;
-  justify-content: center;
+  gap: 0.5rem;
+}
+
+.filter-tag button {
+  background: none;
+  border: none;
+  color: var(--color-accent);
+  font-weight: bold;
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 8px rgba(27, 94, 32, 0.3);
 }
 
-.theme-toggle:hover {
-  background: #2e7d32;
-  border-color: #2e7d32;
-  transform: scale(1.1);
-  box-shadow: 0 4px 12px rgba(27, 94, 32, 0.4);
+/* Cards & Containers */
+.courses-grid, .institutions-grid, .jobs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
 }
 
-.theme-toggle:active {
-  transform: scale(0.95);
+.course-card, .institution-card, .job-card {
+  background-color: var(--color-card-bg);
+  border: 2px solid var(--color-border);
+  border-radius: 12px;
+  padding: 1rem;
+  box-shadow: 0 4px 10px rgba(34,139,34,0.3);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.theme-toggle svg {
-  color: white;
-  width: 24px;
-  height: 24px;
+.course-card:hover, .institution-card:hover, .job-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 15px rgba(34,139,34,0.5);
 }
 
-/* Light Mode Icon (Sun) */
-.theme-toggle .sun-icon {
-  display: none;
+/* Card headers */
+.course-header, .institution-header, .job-header {
+  margin-bottom: 1rem;
 }
 
-.app.dark-mode .theme-toggle .sun-icon {
-  display: block;
+.course-title, .institution-name, .job-title {
+  color: var(--color-text);
+  margin-bottom: 0.25rem;
 }
 
-/* Dark Mode Icon (Moon) */
-.theme-toggle .moon-icon {
-  display: block;
+.course-institution, .company-name, .institution-meta, .institution-type, .institution-status {
+  color: var(--color-grey);
+  font-size: 0.9rem;
 }
 
-.app.dark-mode .theme-toggle .moon-icon {
-  display: none;
+/* Labels & Details */
+.detail-item, .meta-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.25rem;
 }
 
-/* Global Styles for Light/Dark Mode */
-.app a {
-  color: #1b5e20;
-  transition: color 0.3s ease;
+.detail-item .label, .meta-item .label {
+  font-weight: bold;
+  color: var(--color-grey);
 }
 
-.app.dark-mode a {
-  color: #4caf50;
+/* Descriptions */
+.course-description, .institution-description, .job-description, .qualification-preview {
+  margin-top: 0.5rem;
+  color: var(--color-grey);
+  font-size: 0.9rem;
 }
 
-.app a:hover {
-  color: #2e7d32;
+/* Actions inside cards */
+.course-actions, .institution-actions, .job-actions {
+  margin-top: 1rem;
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
 }
 
-.app.dark-mode a:hover {
-  color: #66bb6a;
+/* Empty states */
+.empty-state {
+  text-align: center;
+  color: var(--color-grey);
+  padding: 2rem;
 }
 
-.app button {
-  transition: all 0.3s ease;
+.empty-state h3 {
+  color: var(--color-text);
+  margin-bottom: 0.5rem;
 }
 
-.app input,
-.app select,
-.app textarea {
-  transition: all 0.3s ease;
+.empty-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
 }
 
-.app input:focus,
-.app select:focus,
-.app textarea:focus {
-  border-color: #1b5e20;
-  box-shadow: 0 0 0 3px rgba(27, 94, 32, 0.1);
-}
-
-.app.dark-mode input:focus,
-.app.dark-mode select:focus,
-.app.dark-mode textarea:focus {
-  border-color: #4caf50;
-  box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2);
-}
-
-/* Toast Notifications */
-.toast-container {
-  z-index: 9999;
-}
-
-.app .toast {
-  background: white;
-  border: 1px solid #e0e0e0;
-  color: #424242;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.app.dark-mode .toast {
-  background: #2d3748;
-  border: 1px solid #1b5e20;
-  color: white;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-}
-
-/* Scrollbar Styling */
-.app::-webkit-scrollbar {
-  width: 8px;
-}
-
-.app::-webkit-scrollbar-track {
-  background: #f1f1f1;
-}
-
-.app.dark-mode::-webkit-scrollbar-track {
-  background: #151f6d;
-}
-
-.app::-webkit-scrollbar-thumb {
-  background: #1b5e20;
+/* Badges */
+.course-badge, .job-badge, .job-status, .institution-status {
+  background-color: var(--color-accent);
+  color: var(--color-text);
+  padding: 0.2rem 0.5rem;
   border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: bold;
+  display: inline-block;
+  margin-bottom: 0.5rem;
 }
 
-.app.dark-mode::-webkit-scrollbar-thumb {
-  background: #4caf50;
+.job-badge.new {
+  background-color: var(--color-hover);
 }
 
-.app::-webkit-scrollbar-thumb:hover {
-  background: #2e7d32;
-}
-
-.app.dark-mode::-webkit-scrollbar-thumb:hover {
-  background: #66bb6a;
-}
-
-/* Loading States */
-.app .loading {
-  color: #666;
-}
-
-.app.dark-mode .loading {
-  color: #bdbdbd;
-}
-
-/* Card and Container Shadows */
-.app .card,
-.app .container {
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-}
-
-.app.dark-mode .card,
-.app.dark-mode .container {
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-}
-
-/* Border Colors */
-.app .border-light {
-  border-color: #e0e0e0;
-}
-
-.app.dark-mode .border-light {
-  border-color: #1b5e20;
-}
-
-/* Text Colors */
-.app .text-muted {
-  color: #666;
-}
-
-.app.dark-mode .text-muted {
-  color: #bdbdbd;
-}
-
-.app .text-primary {
-  color: #1a237e;
-}
-
-.app.dark-mode .text-primary {
-  color: white;
-}
-
-.app .text-success {
-  color: #1b5e20;
-}
-
-.app.dark-mode .text-success {
-  color: #4caf50;
-}
-
-/* Background Colors */
-.app .bg-light {
-  background-color: #f8f9fa;
-}
-
-.app.dark-mode .bg-light {
-  background-color: #151f6d;
-}
-
-.app .bg-white {
-  background-color: white;
-}
-
-.app.dark-mode .bg-white {
-  background-color: #2d3748;
-}
-
-/* Responsive Design */
+/* Responsive tweaks */
 @media (max-width: 768px) {
-  .theme-toggle {
-    top: 15px;
-    right: 15px;
-    width: 45px;
-    height: 45px;
-  }
-  
-  .theme-toggle svg {
-    width: 20px;
-    height: 20px;
+  .filter-grid {
+    grid-template-columns: 1fr;
   }
 }
 
-@media (max-width: 480px) {
-  .theme-toggle {
-    top: 10px;
-    right: 10px;
-    width: 40px;
-    height: 40px;
-  }
-  
-  .theme-toggle svg {
-    width: 18px;
-    height: 18px;
-  }
+/* Dark/Light mode toggle button */
+.mode-toggle-btn {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  background-color: var(--color-accent);
+  color: var(--color-text);
+  border: 2px solid var(--color-accent);
+  padding: 0.5rem 1rem;
+  border-radius: 50px;
+  cursor: pointer;
+  z-index: 1000;
+  transition: all 0.3s ease;
 }
 
-/* Smooth Transitions for All Elements */
-.app * {
-  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+.mode-toggle-btn:hover {
+  background-color: transparent;
+  color: var(--color-accent);
 }
 
-/* Focus States for Accessibility */
-.app button:focus,
-.app a:focus,
-.app input:focus,
-.app select:focus {
-  outline: 2px solid #1b5e20;
-  outline-offset: 2px;
-}
-
-.app.dark-mode button:focus,
-.app.dark-mode a:focus,
-.app.dark-mode input:focus,
-.app.dark-mode select:focus {
-  outline: 2px solid #4caf50;
-}

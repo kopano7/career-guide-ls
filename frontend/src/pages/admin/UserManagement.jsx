@@ -11,15 +11,15 @@ const UserManagement = () => {
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('all');
   const [backendStatus, setBackendStatus] = useState('checking');
-  const [apiBaseUrl] = useState('http://localhost:5000');
+  const [apiBaseUrl] = useState('https://career-guide-ls.onrender.com');
 
   // Test API connection directly
   const testApiConnection = async () => {
     try {
       const token = localStorage.getItem('token');
-      console.log('=== 🔍 API CONNECTION DEBUG START ===');
-      console.log('🔐 Token:', token ? 'Present' : 'Missing');
-      console.log('🌐 Backend URL:', apiBaseUrl);
+      console.log('===  API CONNECTION DEBUG START ===');
+      console.log(' Token:', token ? 'Present' : 'Missing');
+      console.log(' Backend URL:', apiBaseUrl);
       
       // Test the API endpoint directly
       const response = await fetch(`${apiBaseUrl}/api/admin/users`, {
@@ -29,12 +29,12 @@ const UserManagement = () => {
         }
       });
       
-      console.log('🌐 Direct API test - Status:', response.status);
-      console.log('🌐 Direct API test - OK:', response.ok);
+      console.log(' Direct API test - Status:', response.status);
+      console.log(' Direct API test - OK:', response.ok);
       
       if (response.ok) {
         const data = await response.json();
-        console.log('✅ Direct API test - Success:', data);
+        console.log(' Direct API test - Success:', data);
         setBackendStatus('connected');
         return true;
       } else {
@@ -45,8 +45,8 @@ const UserManagement = () => {
         return false;
       }
     } catch (error) {
-      console.error('💥 Direct API test failed:', error);
-      console.error('💥 Error details:', error.message);
+      console.error(' Direct API test failed:', error);
+      console.error(' Error details:', error.message);
       setBackendStatus('disconnected');
       return false;
     }
@@ -54,7 +54,7 @@ const UserManagement = () => {
 
   const fetchUsersDirect = async () => {
     try {
-      console.log('🔄 Fetching users directly from backend...');
+      console.log(' Fetching users directly from backend...');
       const token = localStorage.getItem('token');
       
       const response = await fetch(`${apiBaseUrl}/api/admin/users`, {
@@ -69,7 +69,7 @@ const UserManagement = () => {
       }
 
       const data = await response.json();
-      console.log('📨 Raw API response:', data);
+      console.log(' Raw API response:', data);
 
       // Handle different response formats
       let usersData = [];
@@ -110,7 +110,7 @@ const UserManagement = () => {
         console.log('🔄 Trying to fetch users via adminAPI service...');
         try {
           const data = await adminAPI.getUsers(filter !== 'all' ? filter : undefined);
-          console.log('📨 adminAPI response:', data);
+          console.log(' adminAPI response:', data);
           
           const usersData = data?.users || data?.data?.users || data?.data || [];
           setUsers(usersData);
@@ -319,13 +319,13 @@ const UserManagement = () => {
               onClick={handleRefresh}
               className="btn-refresh"
             >
-              🔄 Refresh
+             Refresh
             </button>
             <button 
               onClick={testApiConnection}
               className="btn-debug"
             >
-              🐛 Debug API
+              Debug API
             </button>
           </div>
         </div>
