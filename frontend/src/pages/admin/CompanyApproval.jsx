@@ -12,7 +12,7 @@ const CompanyApproval = () => {
   const [loading, setLoading] = useState(true);
   const [processing, setProcessing] = useState({});
   const [backendStatus, setBackendStatus] = useState('checking');
-  const [apiBaseUrl] = useState('http://localhost:5000');
+  const [apiBaseUrl] = useState('https://career-guide-ls.onrender.com');
 
   // Redirect if not authenticated or not admin
   useEffect(() => {
