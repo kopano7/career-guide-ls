@@ -19,14 +19,13 @@ const AdmissionModal = ({ application, onClose, onConfirm }) => {
       <div className="admission-modal">
         {/* Modal Header */}
         <div className="modal-header">
-          <h2>🎓 Accept Admission Offer</h2>
+          <h2> Accept Admission Offer</h2>
           <button onClick={onClose} className="close-button">×</button>
         </div>
 
         {/* Admission Details */}
         <div className="admission-content">
-          <div className="success-icon">✅</div>
-          
+         
           <div className="admission-info">
             <h3>Congratulations!</h3>
             <p>You have been offered admission to:</p>
@@ -45,11 +44,11 @@ const AdmissionModal = ({ application, onClose, onConfirm }) => {
             <div className="admission-notice">
               <h4>Important Information</h4>
               <ul>
-                <li>✅ By accepting this offer, you confirm your intention to enroll</li>
-                <li>⚠️ You can only accept ONE admission offer</li>
-                <li>🔄 All other pending applications will be automatically withdrawn</li>
-                <li>📅 You will receive further instructions via email</li>
-                <li>⏰ Please respond before the deadline (if applicable)</li>
+                <li> By accepting this offer, you confirm your intention to enroll</li>
+                <li> You can only accept ONE admission offer</li>
+                <li> All other pending applications will be automatically withdrawn</li>
+                <li> You will receive further instructions via email</li>
+                <li> Please respond before the deadline (if applicable)</li>
               </ul>
             </div>
 
