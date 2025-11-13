@@ -112,7 +112,7 @@ const CourseCard = ({ course, onEdit, onDelete, onToggleStatus, onViewApplicatio
             flex: 1
           }}
         >
-          ✏️ Edit
+           Edit
         </button>
         <button 
           onClick={onViewApplications}
@@ -127,7 +127,7 @@ const CourseCard = ({ course, onEdit, onDelete, onToggleStatus, onViewApplicatio
             flex: 1
           }}
         >
-          📋 Applications
+           Applications
         </button>
         <button 
           onClick={onToggleStatus}
@@ -141,7 +141,7 @@ const CourseCard = ({ course, onEdit, onDelete, onToggleStatus, onViewApplicatio
             fontSize: '14px'
           }}
         >
-          {course.status === 'active' ? '⏸️ Pause' : '▶️ Activate'}
+          {course.status === 'active' ? ' Pause' : ' Activate'}
         </button>
         <button 
           onClick={onDelete}
@@ -155,7 +155,7 @@ const CourseCard = ({ course, onEdit, onDelete, onToggleStatus, onViewApplicatio
             fontSize: '14px'
           }}
         >
-          🗑️ Delete
+           Delete
         </button>
       </div>
     </div>
