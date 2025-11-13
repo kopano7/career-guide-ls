@@ -8,16 +8,7 @@ const ApplicationCard = ({ application, onAcceptAdmission, onRefresh }) => {
 
   const { showError, showSuccess } = useNotification();
 
-  const getStatusIcon = () => {
-    switch (application.status) {
-      case 'pending': return '⏳';
-      case 'admitted': return '✅';
-      case 'rejected': return '❌';
-      case 'accepted': return '🎓';
-      default: return '📋';
-    }
-  };
-
+ 
   const getStatusColor = () => {
     switch (application.status) {
       case 'pending': return 'status-pending';
@@ -73,7 +64,7 @@ const ApplicationCard = ({ application, onAcceptAdmission, onRefresh }) => {
       {/* Application Header */}
       <div className="application-header">
         <div className="application-status">
-          <span className="status-icon">{getStatusIcon()}</span>
+          
           <span className="status-text">{getStatusText()}</span>
         </div>
         <div className="application-date">
