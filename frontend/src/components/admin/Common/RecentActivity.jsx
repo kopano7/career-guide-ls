@@ -2,19 +2,7 @@
 import React from 'react';
 
 const RecentActivity = ({ activities, title = "Recent Activity" }) => {
-  const getActivityIcon = (type) => {
-    const icons = {
-      user: '👤',
-      institute: '🏫',
-      company: '💼',
-      course: '📚',
-      job: '💼',
-      system: '⚙️',
-      security: '🔒',
-      default: '📢'
-    };
-    return icons[type] || icons.default;
-  };
+ 
 
   const formatTime = (timestamp) => {
     const now = new Date();
@@ -37,9 +25,7 @@ const RecentActivity = ({ activities, title = "Recent Activity" }) => {
           <div className="activity-list">
             {activities.map((activity, index) => (
               <div key={index} className="activity-item">
-                <div className="activity-icon">
-                  {getActivityIcon(activity.type)}
-                </div>
+               >
                 <div className="activity-content">
                   <div className="activity-message">
                     {activity.description}
