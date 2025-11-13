@@ -41,13 +41,13 @@ const PublicCourseCatalog = () => {
       if (response && response.success) {
         const coursesData = response.data.courses || [];
         setCourses(coursesData);
-        console.log('✅ Fetched courses:', coursesData.length);
+        console.log('Fetched courses:', coursesData.length);
       } else {
-        console.error('❌ Unexpected response format:', response);
+        console.error(' Unexpected response format:', response);
         addNotification('Failed to load courses from server', 'error');
       }
     } catch (error) {
-      console.error('❌ Error fetching courses:', error);
+      console.error(' Error fetching courses:', error);
       addNotification('Error loading courses. Please try again.', 'error');
     } finally {
       setLoading(false);
@@ -229,7 +229,7 @@ const PublicCourseCatalog = () => {
   const AuthPrompt = () => (
     <div className="auth-prompt">
       <div className="auth-prompt-content">
-        <h4>🔐 Create an Account</h4>
+        <h4> Create an Account</h4>
         <p>Register as a student to view course details and apply for courses</p>
         <div className="auth-prompt-actions">
           <Link to="/register" className="btn-primary">
@@ -395,7 +395,7 @@ const PublicCourseCatalog = () => {
           </h2>
           {!isAuthenticated && (
             <div className="auth-reminder">
-              <span>🔐 Register to apply for courses</span>
+              <span> Register to apply for courses</span>
             </div>
           )}
         </div>
@@ -410,38 +410,38 @@ const PublicCourseCatalog = () => {
                     {course.title || course.name || 'Untitled Course'}
                   </h3>
                   <div className="course-institution">
-                    📍 {course.institutionName || course.instituteName || 'Unknown Institution'}
+                     {course.institutionName || course.instituteName || 'Unknown Institution'}
                   </div>
                 </div>
 
                 <div className="course-details">
                   <div className="detail-item">
-                    <span className="label">📚 Field:</span>
+                    
                     <span className="value">
                       {course.category || course.fieldOfStudy || 'Not specified'}
                     </span>
                   </div>
                   <div className="detail-item">
-                    <span className="label">🎯 Level:</span>
+                   
                     <span className="value">
                       {course.qualificationLevel || course.level || 'Not specified'}
                     </span>
                   </div>
                   <div className="detail-item">
-                    <span className="label">⏱️ Duration:</span>
+                   
                     <span className="value">
                       {course.duration || course.durationMonths || 'Not specified'}
                     </span>
                   </div>
                   <div className="detail-item">
-                    <span className="label">💰 Fee:</span>
+                   
                     <span className="value">
                       {formatCurrency(course.tuitionFee || course.fee)}
                     </span>
                   </div>
                   {course.applicationDeadline && (
                     <div className="detail-item deadline">
-                      <span className="label">📅 Deadline:</span>
+                     
                       <span className="value">
                         {formatDate(course.applicationDeadline)}
                       </span>
@@ -463,7 +463,7 @@ const PublicCourseCatalog = () => {
                     className="btn-outline"
                     onClick={(e) => handleViewDetails(course.id, e)}
                   >
-                    {isAuthenticated ? 'View Details' : 'View Details 🔒'}
+                    {isAuthenticated ? 'View Details' : 'View Details '}
                   </Link>
                   <Link 
                     to={`/apply/course/${course.id}`}
@@ -474,14 +474,14 @@ const PublicCourseCatalog = () => {
                       e
                     )}
                   >
-                    {isAuthenticated ? 'Apply Now' : 'Apply Now 🔒'}
+                    {isAuthenticated ? 'Apply Now' : 'Apply Now '}
                   </Link>
                 </div>
 
                 {/* Show message for non-students */}
                 {isAuthenticated && user?.role !== 'student' && (
                   <div className="role-warning">
-                    <small>⚠️ Only student accounts can apply for courses</small>
+                    <small> Only student accounts can apply for courses</small>
                   </div>
                 )}
 
@@ -497,7 +497,7 @@ const PublicCourseCatalog = () => {
           </div>
         ) : (
           <div className="empty-state">
-            <div className="empty-icon">🔍</div>
+           
             <h3>No courses found</h3>
             <p>
               {courses.length === 0 
