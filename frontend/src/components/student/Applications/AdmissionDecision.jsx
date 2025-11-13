@@ -6,15 +6,15 @@ const AdmissionDecision = ({ application, onAccept, onDecline }) => {
   const getDecisionBadge = () => {
     switch (application.status) {
       case 'admitted':
-        return { type: 'success', text: 'Admission Offered', icon: '🎉' };
+        return { type: 'success', text: 'Admission Offered' };
       case 'rejected':
-        return { type: 'error', text: 'Not Admitted', icon: '❌' };
+        return { type: 'error', text: 'Not Admitted'};
       case 'accepted':
-        return { type: 'success', text: 'Admission Accepted', icon: '✅' };
+        return { type: 'success', text: 'Admission Accepted' };
       case 'waiting_list':
-        return { type: 'warning', text: 'Waiting List', icon: '⏳' };
+        return { type: 'warning', text: 'Waiting List'};
       default:
-        return { type: 'info', text: 'Under Review', icon: '📝' };
+        return { type: 'info', text: 'Under Review' };
     }
   };
 
@@ -51,7 +51,7 @@ const AdmissionDecision = ({ application, onAccept, onDecline }) => {
         <div className="letter-header">
           <h3>OFFICIAL ADMISSION DECISION</h3>
           <div className="institution-seal">
-            <div className="seal-icon">🏛️</div>
+           
             <span>{application.instituteName}</span>
           </div>
         </div>
@@ -84,7 +84,7 @@ const AdmissionDecision = ({ application, onAccept, onDecline }) => {
                 </div>
 
                 <div className="acceptance-deadline">
-                  <h4>📅 Response Deadline</h4>
+                  <h4> Response Deadline</h4>
                   <p>
                     Please respond to this admission offer by{' '}
                     <strong>{formatDecisionDate(getAdmissionDeadline())}</strong>.
@@ -159,20 +159,20 @@ const AdmissionDecision = ({ application, onAccept, onDecline }) => {
             onClick={() => onAccept(application.id)}
             className="btn btn-success"
           >
-            ✅ Accept Admission Offer
+             Accept Admission Offer
           </button>
           <button 
             onClick={() => onDecline(application.id)}
             className="btn btn-outline"
           >
-            ❌ Decline Offer
+             Decline Offer
           </button>
         </div>
       )}
 
       <div className="download-section">
         <button className="btn btn-outline btn-sm">
-          📄 Download Decision Letter
+           Download Decision Letter
         </button>
       </div>
     </div>
