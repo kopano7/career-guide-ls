@@ -21,7 +21,7 @@ const ModeToggle = () => {
 
   return (
     <button className="mode-toggle-btn" onClick={toggleMode}>
-      {isLightMode ? '🌙 Dark Mode' : '☀️ Light Mode'}
+      {isLightMode ? 'Dark Mode' : ' Light Mode'}
     </button>
   );
 };
