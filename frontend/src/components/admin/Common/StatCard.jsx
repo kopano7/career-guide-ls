@@ -8,15 +8,10 @@ const StatCard = ({ icon, value, label, trend, trendLabel, alert = false }) => {
     return '#6b7280'; // Neutral - gray
   };
 
-  const getTrendIcon = () => {
-    if (trend > 0) return '↗️';
-    if (trend < 0) return '↘️';
-    return '➡️';
-  };
 
   return (
     <div className={`stat-card ${alert ? 'alert' : ''}`}>
-      <div className="stat-icon">{icon}</div>
+      
       <div className="stat-content">
         <div className="stat-number">{value.toLocaleString()}</div>
         <div className="stat-label">{label}</div>
