@@ -94,7 +94,7 @@ const CourseForm = ({ mode = 'create', course, onSubmit, onClose }) => {
       subjectRequirements: formData.subjectRequirements // Include subject requirements
     };
 
-    console.log('📤 Submitting course data with subject requirements:', submissionData);
+    console.log(' Submitting course data with subject requirements:', submissionData);
     onSubmit(submissionData);
   };
 
@@ -131,7 +131,7 @@ const CourseForm = ({ mode = 'create', course, onSubmit, onClose }) => {
         borderBottom: '1px solid #e5e7eb'
       }}>
         <h2 style={{ margin: 0, fontSize: '24px', color: '#1f2937' }}>
-          {mode === 'create' ? '➕ Add New Course' : '✏️ Edit Course'}
+          {mode === 'create' ? ' Add New Course' : ' Edit Course'}
         </h2>
         <button 
           onClick={onClose}
@@ -465,7 +465,7 @@ const CourseForm = ({ mode = 'create', course, onSubmit, onClose }) => {
               borderRadius: '8px',
               border: '2px dashed #d1d5db'
             }}>
-              <div style={{ fontSize: '32px', marginBottom: '10px' }}>📚</div>
+              
               <p style={{ margin: '0 0 10px 0', color: '#6b7280' }}>
                 No subject requirements added yet
               </p>
