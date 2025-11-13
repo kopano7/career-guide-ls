@@ -85,41 +85,55 @@ const updateCourseApplicationCount = async (courseId) => {
 };
 
 // ✅ FIXED: Generate application number - NO INSTITUTE LOOKUP
-const generateApplicationNumber = async (instituteId) => {
+const generateApplicationNumber = () => {
   try {
     console.log('🔢 Generating application number');
-    
-    // If we have a valid instituteId, use it for the number format
-    if (instituteId && instituteId !== 'no-institute-id') {
-      const timestamp = Date.now().toString().slice(-6);
-      return `INST-${timestamp}`;
-    } else {
-      // Fallback format
-      const timestamp = Date.now().toString().slice(-6);
-      return `APP-${timestamp}-${Math.random().toString(36).substr(2, 6)}`;
-    }
+    const timestamp = Date.now().toString().slice(-6);
+    const random = Math.random().toString(36).substr(2, 6);
+    return `APP-${timestamp}-${random}`;
   } catch (error) {
     console.error('❌ Error generating application number:', error.message);
-    // Ultimate fallback
     return `APP-${Date.now()}`;
   }
 };
 
-// ✅ FIXED: Apply for course using profile grades - FINAL WORKING VERSION
+// ✅ FIXED: Apply for course - HANDLES COURSEID AS OBJECT AND NO INSTITUTE LOOKUPS
 const applyForCourse = async (req, res) => {
   try {
-    console.log('🔄 ========== APPLICATION START (JWT-BASED) ==========');
+    console.log('🔄 ========== APPLICATION START (FINAL FIX) ==========');
     
-    const { uid, studentName } = req.user; // From JWT token
-    const { courseId } = req.body;
+    const { uid, studentName } = req.user;
+    
+    // ✅ FIX: Handle courseId whether it's a string or object
+    let courseId;
+    if (typeof req.body.courseId === 'string') {
+      courseId = req.body.courseId;
+    } else if (req.body.courseId && typeof req.body.courseId === 'object' && req.body.courseId.courseId) {
+      courseId = req.body.courseId.courseId;
+    } else {
+      return res.status(400).json({
+        success: false,
+        error: 'Invalid course ID format'
+      });
+    }
 
-    console.log('👤 User from JWT:', { uid, studentName });
+    console.log('👤 User:', uid);
+    console.log('🎯 Course ID:', courseId);
+    console.log('📦 Request body:', req.body);
 
     // Basic validation
     if (!uid || !courseId) {
       return res.status(400).json({
         success: false,
         error: 'Missing required fields'
+      });
+    }
+
+    // Validate courseId is a non-empty string
+    if (typeof courseId !== 'string' || courseId.trim() === '') {
+      return res.status(400).json({
+        success: false,
+        error: 'Invalid course ID'
       });
     }
 
@@ -136,7 +150,7 @@ const applyForCourse = async (req, res) => {
     const course = courseDoc.data();
     console.log('✅ Course found:', course.name);
 
-    // Get student data (for grades and email)
+    // Get student data
     const studentDoc = await db.collection('users').doc(uid).get();
     if (!studentDoc.exists) {
       return res.status(404).json({
@@ -147,17 +161,13 @@ const applyForCourse = async (req, res) => {
 
     const student = studentDoc.data();
 
-    // ✅ CRITICAL FIX: Use institute data directly from COURSE - NO LOOKUP!
-    const instituteId = course.instituteId;
+    // ✅ CRITICAL: Use institute data directly from course - NO LOOKUPS!
+    const instituteId = course.instituteId || 'no-institute-id';
     const instituteName = course.instituteName || 'Unknown Institution';
 
-    console.log('🎯 Institute info from course:', { 
-      instituteId: instituteId || 'MISSING',
-      instituteName 
-    });
+    console.log('🎯 Institute info:', { instituteId, instituteName });
 
     // Check if already applied to this course
-    console.log('🔍 Step 2: Checking existing applications...');
     const existingApplication = await db.collection('applications')
       .where('studentId', '==', uid)
       .where('courseId', '==', courseId)
@@ -171,7 +181,7 @@ const applyForCourse = async (req, res) => {
       });
     }
 
-    // Check application limits per institute (only if we have valid instituteId)
+    // Check application limits per institute
     if (instituteId && instituteId !== 'no-institute-id') {
       const existingApplications = await db.collection('applications')
         .where('studentId', '==', uid)
@@ -188,33 +198,61 @@ const applyForCourse = async (req, res) => {
       }
     }
 
+    // QUALIFICATION CHECK using profile grades
+    console.log('🎓 Step 5: Checking qualification...');
+    const isQualified = await checkStudentQualification(student.grades || {}, course.requirements || {});
+    console.log('✅ Qualification result:', isQualified);
+
+    if (!isQualified) {
+      console.log('❌ Student does not meet requirements');
+      return res.status(400).json({
+        success: false,
+        error: 'You do not meet the course requirements',
+        message: 'Your profile grades do not meet the minimum requirements for this course'
+      });
+    }
+
+    // Calculate GPA from profile grades
+    const gpa = calculateGPA(student.grades || {});
+    console.log('📈 Calculated GPA:', gpa);
+
     // Generate application number safely - NO INSTITUTE LOOKUP!
-    let applicationNumber = `APP-${Date.now()}-${Math.random().toString(36).substr(2, 6)}`;
+    const applicationNumber = generateApplicationNumber();
     
     // Create application - USING ONLY RELIABLE DATA
     const applicationData = {
       studentId: uid,
-      courseId,
-      instituteId: instituteId || 'no-institute-id',
+      courseId: courseId,
+      instituteId: instituteId,
       status: 'pending',
       appliedAt: new Date(),
-      studentName: studentName || student.name || 'Student', // From JWT first, then DB
+      studentName: studentName || student.name || 'Student',
       studentEmail: student.email,
       courseName: course.name,
       instituteName: instituteName,
       grades: student.grades || {},
-      isQualified: true, // Skip complex qualification for now
-      qualificationScore: 100,
+      calculatedGPA: gpa,
+      isQualified: isQualified,
+      qualificationScore: await calculateQualificationScore(student.grades || {}, course.requirements || {}),
       applicationNumber: applicationNumber,
+      usedProfileGrades: true,
       updatedAt: new Date()
     };
 
-    console.log('💾 Creating application with reliable data...');
+    console.log('💾 Creating application...');
     const applicationRef = await db.collection('applications').add(applicationData);
     console.log('✅ Application created with ID:', applicationRef.id);
 
     // Update course count
     await updateCourseApplicationCount(courseId);
+
+    // Send notification
+    try {
+      await applicationSubmitted(uid, applicationRef.id, course.name, instituteName);
+      console.log('✅ Notification sent');
+    } catch (notificationError) {
+      console.error('⚠️ Notification failed:', notificationError.message);
+    }
 
     console.log('✅ ========== APPLICATION SUCCESS ==========');
 
@@ -226,17 +264,14 @@ const applyForCourse = async (req, res) => {
           ...applicationData
         }
       },
-      message: 'Application submitted successfully!'
+      message: 'Application submitted successfully! Your qualifications have been verified.'
     });
 
   } catch (error) {
     console.error('💥 ========== APPLICATION ERROR ==========');
     console.error('💥 Error:', error.message);
     console.error('💥 Stack:', error.stack);
-    console.error('💥 User context:', { 
-      uid: req.user?.uid,
-      courseId: req.body?.courseId 
-    });
+    console.error('💥 Request body:', req.body);
     
     res.status(500).json({
       success: false,
@@ -261,13 +296,16 @@ const getApplications = async (req, res) => {
         const appData = doc.data();
         const courseDoc = await db.collection('courses').doc(appData.courseId).get();
         
-        // Safe institute lookup
+        // Safe institute lookup - only if instituteId is valid
         let institute = null;
         if (appData.instituteId && appData.instituteId !== 'no-institute-id') {
           try {
-            const instituteDoc = await db.collection('users').doc(appData.instituteId).get();
-            if (instituteDoc.exists) {
-              institute = instituteDoc.data();
+            // Validate instituteId before using it
+            if (appData.instituteId && typeof appData.instituteId === 'string' && appData.instituteId.trim() !== '') {
+              const instituteDoc = await db.collection('users').doc(appData.instituteId).get();
+              if (instituteDoc.exists) {
+                institute = instituteDoc.data();
+              }
             }
           } catch (error) {
             console.error('Error fetching institute:', error.message);
