@@ -36,19 +36,19 @@ const PublicInstitutionList = () => {
       // Use the correct endpoint from your publicRoutes.js
       const response = await get('/api/public/institutions');
       
-      console.log('🏫 API Response:', response);
+      console.log(' API Response:', response);
       
       // Match the response structure from your backend publicRoutes.js
       if (response && response.success) {
         const institutionsData = response.data?.institutions || [];
         setInstitutions(institutionsData);
-        console.log('✅ Fetched institutions:', institutionsData.length);
+        console.log('Fetched institutions:', institutionsData.length);
       } else {
-        console.error('❌ Unexpected response format:', response);
+        console.error(' Unexpected response format:', response);
         addNotification('Failed to load institutions from server', 'error');
       }
     } catch (error) {
-      console.error('❌ Error fetching institutions:', error);
+      console.error('Error fetching institutions:', error);
       addNotification('Error loading institutions. Please try again.', 'error');
     } finally {
       setLoading(false);
@@ -198,7 +198,7 @@ const PublicInstitutionList = () => {
   const AuthPrompt = () => (
     <div className="auth-prompt">
       <div className="auth-prompt-content">
-        <h4>🏫 Create an Account</h4>
+        <h4> Create an Account</h4>
         <p>Register to view detailed institution profiles and explore their course offerings</p>
         <div className="auth-prompt-actions">
           <Link to="/register" className="btn-primary">
@@ -338,7 +338,7 @@ const PublicInstitutionList = () => {
           </h2>
           {!isAuthenticated && (
             <div className="auth-reminder">
-              <span>🔐 Register to view detailed profiles and courses</span>
+              <span> Register to view detailed profiles and courses</span>
             </div>
           )}
         </div>
@@ -366,23 +366,23 @@ const PublicInstitutionList = () => {
 
                 <div className="institution-details">
                   <div className="detail-item">
-                    <span className="label">📍 Location:</span>
+                    <span className="label"> Location:</span>
                     <span className="value">{getInstitutionLocation(institution)}</span>
                   </div>
                   <div className="detail-item">
-                    <span className="label">📧 Email:</span>
+                    <span className="label"> Email:</span>
                     <span className="value">{institution.email || 'Not provided'}</span>
                   </div>
                   <div className="detail-item">
-                    <span className="label">📞 Phone:</span>
+                    <span className="label"> Phone:</span>
                     <span className="value">{institution.phone || 'Not provided'}</span>
                   </div>
                   <div className="detail-item">
-                    <span className="label">📚 Courses:</span>
+                    <span className="label"> Courses:</span>
                     <span className="value">{getCourseCount(institution)} programs available</span>
                   </div>
                   <div className="detail-item">
-                    <span className="label">📅 Joined:</span>
+                    <span className="label"> Joined:</span>
                     <span className="value">{formatDate(institution.createdAt)}</span>
                   </div>
                 </div>
@@ -405,7 +405,7 @@ const PublicInstitutionList = () => {
                       e
                     )}
                   >
-                    {isAuthenticated ? 'View Profile' : 'View Profile 🔒'}
+                    {isAuthenticated ? 'View Profile' : 'View Profile '}
                   </Link>
                   <Link 
                     to={`/courses?institution=${encodeURIComponent(getInstitutionName(institution))}`}
@@ -415,7 +415,7 @@ const PublicInstitutionList = () => {
                       e
                     )}
                   >
-                    {isAuthenticated ? 'View Courses' : 'View Courses 🔒'}
+                    {isAuthenticated ? 'View Courses' : 'View Courses '}
                   </Link>
                 </div>
 
@@ -431,7 +431,7 @@ const PublicInstitutionList = () => {
           </div>
         ) : (
           <div className="empty-state">
-            <div className="empty-icon">🏫</div>
+            
             <h3>No institutions found</h3>
             <p>
               {institutions.length === 0 
