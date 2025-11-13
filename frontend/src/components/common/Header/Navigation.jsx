@@ -38,7 +38,7 @@ const Navigation = () => {
           { path: '/student/applications', label: 'My Applications' },
           { path: '/student/jobs', label: 'Jobs' }
         ];
-        console.log('🎓 Returning student links:', studentLinks);
+        console.log(' Returning student links:', studentLinks);
         return studentLinks;
         
       case 'institute':
@@ -70,7 +70,7 @@ const Navigation = () => {
         return adminLinks;
         
       default:
-        console.log('❓ Unknown role, returning empty links');
+        console.log(' Unknown role, returning empty links');
         return [];
     }
   };
@@ -108,7 +108,7 @@ const Navigation = () => {
           className="theme-toggle-btn"
           aria-label="Toggle dark/light mode"
         >
-          {theme === 'dark' ? '☀️' : '🌙'}
+          {theme === 'dark' ? }
         </button>
         
         {/* Logout button - only show when authenticated */}
