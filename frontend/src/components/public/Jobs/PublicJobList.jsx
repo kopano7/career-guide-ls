@@ -37,19 +37,19 @@ const PublicJobList = () => {
       // Use the correct endpoint from your publicRoutes.js
       const response = await get('/api/public/jobs');
       
-      console.log('💼 API Response:', response);
+      console.log(' API Response:', response);
       
       // Match the response structure from your backend publicRoutes.js
       if (response && response.success) {
         const jobsData = response.data?.jobs || [];
         setJobs(jobsData);
-        console.log('✅ Fetched jobs:', jobsData.length);
+        console.log('Fetched jobs:', jobsData.length);
       } else {
-        console.error('❌ Unexpected response format:', response);
+        console.error(' Unexpected response format:', response);
         addNotification('Failed to load jobs from server', 'error');
       }
     } catch (error) {
-      console.error('❌ Error fetching jobs:', error);
+      console.error(' Error fetching jobs:', error);
       addNotification('Error loading jobs. Please try again.', 'error');
     } finally {
       setLoading(false);
@@ -243,7 +243,7 @@ const PublicJobList = () => {
   const AuthPrompt = () => (
     <div className="auth-prompt">
       <div className="auth-prompt-content">
-        <h4>💼 Create a Student Account</h4>
+        <h4> Create a Student Account</h4>
         <p>Register as a student to view job details and apply for career opportunities</p>
         <div className="auth-prompt-actions">
           <Link to="/register" className="btn-primary">
@@ -405,7 +405,7 @@ const PublicJobList = () => {
           </h2>
           {!isAuthenticated && (
             <div className="auth-reminder">
-              <span>🔐 Register as student to apply for jobs</span>
+              <span> Register as student to apply for jobs</span>
             </div>
           )}
         </div>
@@ -423,27 +423,27 @@ const PublicJobList = () => {
                   </div>
                   <h3 className="job-title">{job.title || 'Untitled Position'}</h3>
                   <div className="company-name">
-                    🏢 {job.companyName || 'Unknown Company'}
+                     {job.companyName || 'Unknown Company'}
                   </div>
                 </div>
 
                 <div className="job-meta">
                   <div className="meta-item">
-                    <span className="label">📍</span>
+                    
                     <span className="value">{job.location || 'Location not specified'}</span>
                   </div>
                   <div className="meta-item">
-                    <span className="label">⏱️</span>
+                    
                     <span className="value">
                       {job.jobType || job.type || job.employmentType || 'Full-time'}
                     </span>
                   </div>
                   <div className="meta-item">
-                    <span className="label">💰</span>
+                    
                     <span className="value">{formatSalary(job.salary || job.salaryRange)}</span>
                   </div>
                   <div className="meta-item">
-                    <span className="label">📅</span>
+                   
                     <span className="value">
                       {job.applicationDeadline ? 
                         `Apply by ${formatDate(job.applicationDeadline)}` : 
@@ -495,7 +495,7 @@ const PublicJobList = () => {
                         e
                       )}
                     >
-                      {isAuthenticated ? 'View Details' : 'View Details 🔒'}
+                      {isAuthenticated ? 'View Details' : 'View Details '}
                     </Link>
                     <Link 
                       to={`/apply/job/${job.id}`}
@@ -507,7 +507,7 @@ const PublicJobList = () => {
                         e
                       )}
                     >
-                      {isAuthenticated ? 'Apply Now' : 'Apply Now 🔒'}
+                      {isAuthenticated ? 'Apply Now' : 'Apply Now '}
                     </Link>
                   </div>
                 </div>
@@ -515,7 +515,7 @@ const PublicJobList = () => {
                 {/* Show message for non-students */}
                 {isAuthenticated && user?.role !== 'student' && (
                   <div className="role-warning">
-                    <small>⚠️ Only student accounts can apply for jobs</small>
+                    <small> Only student accounts can apply for jobs</small>
                   </div>
                 )}
 
