@@ -8,7 +8,6 @@ import AppRoutes from './routes/AppRoutes';
 import Toast from './components/common/Notification/Toast';
 import { ThemeToggle } from './components/common/Header/ThemeToggle';
 import Header from './components/common/Header/Header';
-import Footer from './components/common/Footer/Footer';
 import './App.css';
 import ModeToggle from './components/common/ModeToggle';
 
