@@ -4,11 +4,11 @@ import './ApplicantDetailsModal.css';
 const ApplicantDetailsModal = ({ applicant, onClose, onStatusUpdate, actionLoading }) => {
   const getStatusBadge = (status) => {
     const statusConfig = {
-      pending: { class: 'status-pending', label: 'Under Review', icon: '⏳' },
-      shortlisted: { class: 'status-shortlisted', label: 'Shortlisted', icon: '✅' },
-      interviewed: { class: 'status-interviewed', label: 'Interviewed', icon: '💼' },
-      rejected: { class: 'status-rejected', label: 'Rejected', icon: '❌' },
-      hired: { class: 'status-hired', label: 'Hired', icon: '🎉' }
+      pending: { class: 'status-pending', label: 'Under Review' },
+      shortlisted: { class: 'status-shortlisted', label: 'Shortlisted' },
+      interviewed: { class: 'status-interviewed', label: 'Interviewed'},
+      rejected: { class: 'status-rejected', label: 'Rejected' },
+      hired: { class: 'status-hired', label: 'Hired' }
     };
     
     const config = statusConfig[status] || statusConfig.pending;
@@ -109,7 +109,7 @@ const ApplicantDetailsModal = ({ applicant, onClose, onStatusUpdate, actionLoadi
                   <span>
                     {applicant.transcript.gpa}/4.0
                     {applicant.transcript.verified && (
-                      <span className="verified-badge">✅ Verified</span>
+                      <span className="verified-badge"> Verified</span>
                     )}
                   </span>
                 </div>
@@ -162,7 +162,7 @@ const ApplicantDetailsModal = ({ applicant, onClose, onStatusUpdate, actionLoadi
                     <div key={index} className="requirement-item">
                       <span className="requirement-text">{requirement}</span>
                       <span className={`requirement-status ${hasSkill ? 'met' : 'not-met'}`}>
-                        {hasSkill ? '✅' : '❌'}
+                        {hasSkill ? }
                       </span>
                     </div>
                   );
