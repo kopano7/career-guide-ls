@@ -18,7 +18,7 @@ const AdminDashboard = () => {
   }, []);
 
   const loadDashboardData = async () => {
-    console.log('🔄 Loading dashboard data from:', apiBaseUrl);
+    console.log(' Loading dashboard data from:', apiBaseUrl);
     
     try {
       const token = localStorage.getItem('token');
@@ -38,7 +38,7 @@ const AdminDashboard = () => {
       }
 
       setBackendStatus('connected');
-      console.log('✅ Backend connected, loading admin stats...');
+      console.log(' Backend connected, loading admin stats...');
 
       // Load real admin stats
       const statsResponse = await fetch(`${apiBaseUrl}/api/admin/stats`, {
@@ -65,13 +65,13 @@ const AdminDashboard = () => {
         // Handle different response formats
         const statsData = data.data?.stats || data.data || data;
         setStats(statsData);
-        console.log('✅ Real admin stats loaded successfully');
+        console.log(' Real admin stats loaded successfully');
       } else {
         throw new Error(data.message || 'Invalid response from server');
       }
 
     } catch (error) {
-      console.error('❌ Failed to load real data:', error);
+      console.error(' Failed to load real data:', error);
       setBackendStatus('disconnected');
       
       // Fallback to demo data
@@ -92,7 +92,7 @@ const AdminDashboard = () => {
 
   const loadDataFromMultipleEndpoints = async (token) => {
     try {
-      console.log('🔄 Loading data from multiple endpoints...');
+      console.log(' Loading data from multiple endpoints...');
       
       const endpoints = [
         { key: 'users', url: '/api/admin/users' },
@@ -163,7 +163,7 @@ const AdminDashboard = () => {
       }
 
       setStats(collectedData);
-      console.log('✅ Data loaded from multiple endpoints');
+      console.log(' Data loaded from multiple endpoints');
 
     } catch (error) {
       console.error('Failed to load from multiple endpoints:', error);
@@ -233,9 +233,9 @@ const AdminDashboard = () => {
   const testBackendConnection = async () => {
     try {
       const response = await fetch(`${apiBaseUrl}/health`);
-      alert(`Backend Status: ${response.ok ? '✅ Connected' : '❌ Error'}\nURL: ${apiBaseUrl}`);
+      alert(`Backend Status: ${response.ok ? ' Connected' : ' Error'}\nURL: ${apiBaseUrl}`);
     } catch (error) {
-      alert(`❌ Backend Connection Failed:\n${error.message}`);
+      alert(` Backend Connection Failed:\n${error.message}`);
     }
   };
 
@@ -283,12 +283,12 @@ const AdminDashboard = () => {
       {/* Connection Status */}
       {backendStatus === 'connected' ? (
         <div className="success-banner">
-          <span>✅ Connected to backend server</span>
+          <span>Connected to backend server</span>
           <small>Displaying real data from Firebase</small>
         </div>
       ) : (
         <div className="warning-banner">
-          <span>⚠️ Using demo data</span>
+          <span> Using demo data</span>
           <small>Backend connection failed - showing sample statistics</small>
         </div>
       )}
@@ -412,7 +412,7 @@ const AdminDashboard = () => {
           <div className="info-item">
             <span className="info-label">Backend Status:</span>
             <span className={`info-value ${backendStatus}`}>
-              {backendStatus === 'connected' ? '✅ Connected' : '❌ Disconnected'}
+              {backendStatus === 'connected' ? ' Connected' : ' Disconnected'}
             </span>
           </div>
           <div className="info-item">
