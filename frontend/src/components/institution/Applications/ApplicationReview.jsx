@@ -54,7 +54,7 @@ const ApplicationReview = ({
             </button>
           </div>
           <div className="modal-body text-center py-8">
-            <div className="text-gray-400 text-4xl mb-4">❌</div>
+            
             <p className="text-gray-500 mb-4">Application data is not available.</p>
             <button 
               className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors"
@@ -509,7 +509,7 @@ const ApplicationReview = ({
                 {!isQualified && (
                   <div className="bg-red-50 border border-red-200 rounded-lg p-4">
                     <p className="text-red-700 text-sm">
-                      ⚠️ This student does not meet all course requirements and cannot be admitted.
+                      This student does not meet all course requirements and cannot be admitted.
                     </p>
                   </div>
                 )}
