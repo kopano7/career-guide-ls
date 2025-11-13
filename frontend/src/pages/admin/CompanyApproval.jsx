@@ -65,13 +65,13 @@ const CompanyApproval = () => {
         setBackendStatus('connected');
         const companiesData = data.data?.companies || data.companies || [];
         setCompanies(companiesData);
-        console.log(`✅ Loaded ${companiesData.length} pending companies`);
+        console.log(`Loaded ${companiesData.length} pending companies`);
       } else {
         throw new Error(data.message || 'Invalid response format');
       }
       
     } catch (error) {
-      console.error('❌ Error fetching companies:', error);
+      console.error('Error fetching companies:', error);
       setBackendStatus('error');
       
       if (error.message.includes('401') || error.message.includes('Unauthorized')) {
@@ -151,7 +151,7 @@ const CompanyApproval = () => {
 
   const handleApproval = async (companyId, approved) => {
     try {
-      console.log(`🔄 Processing ${approved ? 'approval' : 'rejection'} for company:`, companyId);
+      console.log(` Processing ${approved ? 'approval' : 'rejection'} for company:`, companyId);
       
       setProcessing(prev => ({ ...prev, [companyId]: true }));
 
@@ -170,7 +170,7 @@ const CompanyApproval = () => {
         body: JSON.stringify({ approved })
       });
 
-      console.log('📨 Approval response status:', response.status);
+      console.log(' Approval response status:', response.status);
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -178,7 +178,7 @@ const CompanyApproval = () => {
       }
 
       const data = await response.json();
-      console.log('📨 Approval response data:', data);
+      console.log(' Approval response data:', data);
 
       if (data.success) {
         // Remove the company from the list
@@ -186,16 +186,16 @@ const CompanyApproval = () => {
         
         // Show success notification
         if (approved) {
-          alert('✅ Company approved! They can now access the platform and post jobs.');
+          alert(' Company approved! They can now access the platform and post jobs.');
         } else {
-          alert('❌ Company rejected. They will be notified of the decision.');
+          alert(' Company rejected. They will be notified of the decision.');
         }
       } else {
         throw new Error(data.message || 'Approval process failed');
       }
       
     } catch (error) {
-      console.error('❌ Error processing approval:', error);
+      console.error(' Error processing approval:', error);
       
       if (error.message.includes('401') || error.message.includes('Unauthorized')) {
         alert('Session expired. Please login again.');
@@ -217,12 +217,12 @@ const CompanyApproval = () => {
       const response = await fetch(`${apiBaseUrl}/health`);
       
       if (response.ok) {
-        alert(`✅ Backend is running at ${apiBaseUrl}`);
+        alert(` Backend is running at ${apiBaseUrl}`);
       } else {
-        alert(`❌ Backend returned ${response.status}`);
+        alert(` Backend returned ${response.status}`);
       }
     } catch (error) {
-      alert(`❌ Cannot connect to backend: ${error.message}`);
+      alert(` Cannot connect to backend: ${error.message}`);
     }
   };
 
@@ -403,14 +403,14 @@ Registered: ${company.createdAt ? new Date(company.createdAt).toLocaleDateString
                           onClick={() => handleApproval(company.id, true)}
                           disabled={processing[company.id]}
                         >
-                          {processing[company.id] ? '⏳' : '✅'} Approve
+                          {processing[company.id] ? } Approve
                         </button>
                         <button 
                           className="btn-danger"
                           onClick={() => handleApproval(company.id, false)}
                           disabled={processing[company.id]}
                         >
-                          {processing[company.id] ? '⏳' : '❌'} Reject
+                          {processing[company.id] ? } Reject
                         </button>
                       </div>
                     </div>
@@ -419,7 +419,7 @@ Registered: ${company.createdAt ? new Date(company.createdAt).toLocaleDateString
               </div>
             ) : (
               <div className="empty-state">
-                <div className="empty-icon">🎉</div>
+               
                 <h4>No Pending Companies</h4>
                 <p>All registration requests have been processed.</p>
                 {backendStatus === 'connected' ? (
@@ -442,7 +442,7 @@ Registered: ${company.createdAt ? new Date(company.createdAt).toLocaleDateString
             <div className="info-item">
               <span className="info-label">Backend Status:</span>
               <span className={`info-value ${backendStatus}`}>
-                {backendStatus === 'connected' ? '✅ Connected' : '❌ Disconnected'}
+                {backendStatus === 'connected' ? ' Connected' : ' Disconnected'}
               </span>
             </div>
             <div className="info-item">
