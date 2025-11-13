@@ -97,35 +97,65 @@ const generateApplicationNumber = () => {
   }
 };
 
-// ✅ FIXED: Apply for course - HANDLES COURSEID AS OBJECT AND NO INSTITUTE LOOKUPS
+// ✅ DEBUG VERSION: Apply for course - COMPREHENSIVE DEBUGGING
 const applyForCourse = async (req, res) => {
   try {
-    console.log('🔄 ========== APPLICATION START (FINAL FIX) ==========');
+    console.log('🔄 ========== APPLICATION START (DEBUG) ==========');
+    console.log('📦 FULL REQUEST BODY:', JSON.stringify(req.body, null, 2));
+    console.log('📦 Request body type:', typeof req.body);
+    console.log('📦 Request body keys:', Object.keys(req.body));
     
     const { uid, studentName } = req.user;
     
-    // ✅ FIX: Handle courseId whether it's a string or object
+    // DEBUG: Log everything about courseId
+    console.log('🎯 COURSEID DEBUG:');
+    console.log('   req.body.courseId:', req.body.courseId);
+    console.log('   typeof req.body.courseId:', typeof req.body.courseId);
+    
+    if (req.body.courseId) {
+      console.log('   req.body.courseId keys:', Object.keys(req.body.courseId));
+      console.log('   req.body.courseId.courseId:', req.body.courseId.courseId);
+    }
+    
+    // ✅ SIMPLIFIED: Try multiple ways to get courseId
     let courseId;
+    
     if (typeof req.body.courseId === 'string') {
       courseId = req.body.courseId;
-    } else if (req.body.courseId && typeof req.body.courseId === 'object' && req.body.courseId.courseId) {
+      console.log('✅ Using courseId as string:', courseId);
+    } else if (req.body.courseId && req.body.courseId.courseId) {
       courseId = req.body.courseId.courseId;
+      console.log('✅ Using courseId from object:', courseId);
+    } else if (req.body.courseId && req.body.courseId.id) {
+      courseId = req.body.courseId.id;
+      console.log('✅ Using courseId from id field:', courseId);
+    } else if (req.body.id) {
+      courseId = req.body.id;
+      console.log('✅ Using id as courseId:', courseId);
     } else {
+      console.log('❌ No valid courseId found');
       return res.status(400).json({
         success: false,
-        error: 'Invalid course ID format'
+        error: 'Invalid course ID format',
+        debug: {
+          receivedBody: req.body,
+          courseId: req.body.courseId
+        }
       });
     }
 
     console.log('👤 User:', uid);
-    console.log('🎯 Course ID:', courseId);
-    console.log('📦 Request body:', req.body);
+    console.log('🎯 Final Course ID:', courseId);
 
     // Basic validation
     if (!uid || !courseId) {
       return res.status(400).json({
         success: false,
-        error: 'Missing required fields'
+        error: 'Missing required fields',
+        debug: {
+          uid: uid,
+          courseId: courseId
+        }
       });
     }
 
@@ -133,7 +163,11 @@ const applyForCourse = async (req, res) => {
     if (typeof courseId !== 'string' || courseId.trim() === '') {
       return res.status(400).json({
         success: false,
-        error: 'Invalid course ID'
+        error: 'Invalid course ID',
+        debug: {
+          courseId: courseId,
+          type: typeof courseId
+        }
       });
     }
 
@@ -143,7 +177,10 @@ const applyForCourse = async (req, res) => {
     if (!courseDoc.exists) {
       return res.status(404).json({
         success: false,
-        error: 'Course not found'
+        error: 'Course not found',
+        debug: {
+          courseId: courseId
+        }
       });
     }
 
@@ -174,7 +211,6 @@ const applyForCourse = async (req, res) => {
       .get();
 
     if (!existingApplication.empty) {
-      console.log('❌ Already applied to this course');
       return res.status(400).json({
         success: false,
         error: 'Already applied to this course'
