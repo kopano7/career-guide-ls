@@ -129,10 +129,10 @@ const ApplicationModal = ({ course, onClose, onSubmit, loading }) => {
         {/* Qualification Status */}
         <div className={`qualification-status ${qualificationStatus}`}>
           <div className="status-icon">
-            {qualificationStatus === 'qualified' && '✅'}
-            {qualificationStatus === 'partially-qualified' && '⚠️'}
-            {qualificationStatus === 'not-qualified' && '❌'}
-            {qualificationStatus === 'no-requirements' && 'ℹ️'}
+            {qualificationStatus === 'qualified' '}
+            {qualificationStatus === 'partially-qualified' }
+            {qualificationStatus === 'not-qualified' }
+            {qualificationStatus === 'no-requirements'}
           </div>
           <div className="status-content">
             <h4>{qualificationMessages[qualificationStatus].message}</h4>
