@@ -16,7 +16,7 @@ const CourseCard = ({
       return {
         type: 'warning',
         text: 'Add grades to check eligibility',
-        icon: '⚠️'
+       
       };
     }
 
@@ -24,14 +24,13 @@ const CourseCard = ({
       return {
         type: 'success',
         text: 'You qualify for this course',
-        icon: '✅'
-      };
+        
     }
 
     return {
       type: 'error',
       text: 'Requirements not met',
-      icon: '❌'
+      
     };
   };
 
@@ -111,7 +110,7 @@ const CourseCard = ({
       {/* Application Blockers */}
       {applicationStatus.missingTranscript && (
         <div className="application-blocker">
-          <div className="blocker-icon">📄❌</div>
+          
           <div className="blocker-text">
             <strong>Transcript Required:</strong> Upload your academic transcript to apply
           </div>
@@ -123,7 +122,7 @@ const CourseCard = ({
 
       {!applicationStatus.missingTranscript && !profile?.transcript?.verified && (
         <div className="application-blocker">
-          <div className="blocker-icon">⏳</div>
+         
           <div className="blocker-text">
             <strong>Transcript Pending Verification:</strong> Wait for verification to complete
           </div>
